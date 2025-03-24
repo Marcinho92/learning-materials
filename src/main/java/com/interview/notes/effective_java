@@ -1,0 +1,57 @@
+https://learning.oreilly.com/library/view/effective-java-3rd
+
+Chapter 2. Creating and Destroying Objects
+    - factory method and builder over constructors
+    - singleton
+
+
+Chapter 3. Methods Common to All Objects
+    - equals, hashCode, toString, clone, compareTo (from Comparable),
+
+
+Chapter 4. Classes and Interfaces
+    - The rule of thumb is simple: make each class or member as inaccessible as possible.
+    - Minimize mutability - Immutable objects are inherently thread-safe; they require no synchronization.
+    - Prefer interfaces to abstract classes:
+        - Existing classes can easily be retrofitted to implement a new interface
+        - Interfaces are ideal for defining mixins (interface is called a mixin because
+            it allows the optional functionality to be “mixed in” to the type’s primary functionality)
+        - Interfaces allow for the construction of nonhierarchical type frameworks - it is perfectly permissible
+            for a single class to implement both Singer and Songwriter. In fact, we can define a third interface
+            that extends both Singer and Songwriter and adds new methods
+    - Use interfaces only to define types
+
+
+Chapter 5. Generics
+    - Generic method: static <E> List<E> asList(E[] a)
+    - public class Stack<E> {
+                        private E[] elements;
+                    }
+    - Iterable of some subtype of E - there is a wildcard type that means precisely that: Iterable<? extends E>
+    - Unbounded wildcard type: List<?>
+    - Bounded type parameter: <E extends Number>
+    - Don’t use raw types
+    - Prefer lists to arrays
+
+
+Chapter 11. Concurrency
+    - Synchronize access to shared mutable data
+        . Synchronization is not guaranteed to work unless both read and write operations are synchronized
+        . When multiple threads share mutable data, each thread that reads or writes the data must perform synchronization
+    - Avoid excessive synchronization
+    - CopyOnWriteArrayList - all modification operations are implemented by making a fresh copy of the entire underlying array.
+    - Prefer executors, tasks, and streams to threads
+        . ExecutorService exec = Executors.newSingleThreadExecutor();
+            exec.execute(runnable);
+            exec.shutdown();  - if you fail to do this, it is likely that your VM will not exit
+        . There are two kinds of tasks: Runnable and its close cousin, Callable (which is like Runnable,
+            except that it returns a value and can throw arbitrary exceptions)
+    - Prefer concurrency utilities to wait and notify
+        . use ConcurrentHashMap in preference to Collections.synchronizedMap
+        . The most commonly used synchronizers are CountDownLatch and Semaphore. Less commonly used
+            are CyclicBarrier and Exchanger. The most powerful synchronizer is Phaser
+        . Always use the wait loop idiom to invoke the wait method; never invoke it outside of a loop
+
+
+
+

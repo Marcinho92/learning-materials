@@ -1,0 +1,451 @@
+https://learning.oreilly.com/library/view/effective-java-3rd
+https://javarevisited.blogspot.com/2015/10/133-java-interview-questions-answers-from-last-5-years.html
+
+
+Interview preparation:
+Step 1: Know Your Current Project Inside and Out
+
+Step 2: Java Developer Competencies
+    - Object-Oriented Programming principles, including SOLID principles (prepare for inheritance puzzles)
+    - Multithreading and Concurrency (prepare for Executor framework and concurrency API)
+    - Collection framework (Comprehend the internal workings of each collection data structure, such as HashMap, ConcurrentHashMap, HashSet)
+    - Serialization (Understand its functioning)
+    - Design Patterns (Familiarize yourself with at least 4–5 design patterns, including creational, behavioral, and structural patterns)
+    - Garbage Collection
+    - Java Generics
+    - Java 8 (Stream and Functional Programming—prepare to write Java 8 code for stream operations)
+    - SQL Queries (Be ready to write queries involving JOINS and employee tables, such as retrieving the highest salary)
+    - Coding Practice (Solve a variety of Array and String problems)
+    - Memory Management (Stay informed about memory management changes in Java 8 and above)
+
+
+OOP:
+    - 4 principles of OOP:
+        . inheritance - used to create a hierarchy of classes that inherit and extend behavior from each other.
+        . abstraction - used to hide the implementation details of components and to present a simpler, higher-level interface to other parts of the system
+        . encapsulation - used to protect the internal state of objects and to control how other objects can access or modify that state
+        . polymorphism - ability of objects of different classes to be treated as if they are of the same type. It allows us to write code
+            that can work with objects of different types in a uniform way, without needing to know the specific class of each object.
+    - abstract class vs interface. When to Use:
+        . abstract class:
+            . When you have some common implementation to share among subclasses.
+            . When you want to enforce a hierarchy and prevent direct instantiation of the base class.
+            . When you need to control access to members using access modifiers.
+        . interface:
+            . When you want to define a contract that multiple unrelated classes can implement.
+            . When you want to achieve loose coupling between classes.
+            . When you need to support multiple inheritance.
+    - abstract class constructor:
+        . Abstract class constructors are not used for object creation directly, but they are invoked when a subclass object is created.
+        . They ensure consistent initialization and enforce class invariants, promoting code reusability and maintainability.
+        . Subclasses must call their superclass constructor (implicitly or explicitly) during their own construction.
+            This ensures proper initialization of inherited state.
+        . Abstract classes often have member variables that need to be initialized for proper object state.
+            Constructors perform this initialization, ensuring consistent setup for all subclasses.
+    - difference between abstraction and encapsulation:
+        . Scope: Abstraction operates at a higher level, focusing on the overall design and interface.
+            Encapsulation works at the object level, managing internal data and implementation.
+        . Purpose: Abstraction aims to simplify complexity and promote reusability.
+            Encapsulation aims to protect data and manage dependencies.
+        . Implementation: Abstraction is often achieved through abstract classes or interfaces.
+            Encapsulation is typically implemented using access modifiers and methods to control access to data.
+    - inheritance, composition and aggregation
+    - SOLID:
+        . Single Responsibility Principle - class should have only one responsibility or job. For example, if we have a class named
+            User, it should only be responsible for handling user-related functionalities such as authentication, user data management.
+        . Open/Closed Principle - class should be open for extension but closed for modification.
+        . Liskov Substitution Principle - derived classes should be able to replace their base classes without
+            affecting the correctness of the program.
+        . Interface Segregation Principle - class should not be forced to implement interfaces it does not use.
+            In other words, we should separate interfaces that are too large or general into smaller and more specific interfaces.
+        . Dependency Inversion Principle - high-level modules should not depend on low-level modules.
+            For example, instead of depending on a specific database implementation in a class, we should depend on
+                a database interface, which can be implemented by different databases. This allows for easier testing,
+                maintenance, and scalability.
+    - marker interface - interface without any methods, eg. Serializable
+    - The overriding method can throw the same exceptions as the overridden method, or any subset of those exceptions.
+
+
+Step 3. Core Java
+    - JIT - Just In Time compiler. Feature of JVM that improves the performance of Java applications by
+        compiling bytecode into native machine code at runtime.
+    - How to create an immutable class:
+        . Declare the class as final so it can’t be extended
+        . Make all of the fields private so that direct access is not allowed
+        . Don’t provide setter methods for variables
+        . Make all mutable fields final so that a field’s value can be assigned only once
+        . Initialize all fields using a constructor method performing deep copy
+        . Perform cloning of objects in the getter methods to return a copy rather than returning the actual object reference
+    - class loader is responsible for loading classes into the JVM at runtime. The JVM includes several
+        built-in class loaders, such as the bootstrap class loader and the system class loader.
+    - How does HashMap work internally? Explain the internal implementation of HashMap.
+    - To use the try-with-resources statement, a class must implement the AutoCloseable interface.
+        The AutoCloseable interface has a single method close() which is called when the try block exits, eg.
+        FileInputStream, FileOutputStream, BufferedReader, Connection,
+    - UnsupportedOperationException - thrown when trying to modify immutable collection or map
+    - in-build immutable classes, eg. String, Integer, Long, Character, Double, BigDecimal
+    - In Java, there are several ways to perform asynchronous operations:
+        . Callable - similar to a Runnable, but it can return a value and throw a checked exception.
+            Callable<Integer> myCallable = () -> { doSomething(); return result; };
+            Future<Integer> future = executorService.submit(myCallable);
+        . Runnable - task that can be executed by an Executor. It does not return a value and cannot throw a checked exception.
+            Runnable myRunnable = () -> { doSomething(); };
+            Future<?> future = executorService.submit(myRunnable);
+        . CompletableFuture - can be used to compose multiple asynchronous operations together, handle errors, and provide callbacks.
+            It can be used to perform actions when the computation is complete, such as applying a function to the result,
+            chaining multiple operations together, or handling errors.
+    - Comparable interface - used to define the natural ordering of objects. When a class implements the Comparable interface,
+        it indicates that instances of that class have a default way to be sorted. The natural ordering is defined
+        by implementing the compareTo() method
+    - Comparator interface - used to provide custom comparison logic for objects that may not have a natural ordering
+        or when you want to sort objects based on different criteria than their inherent properties. Ordering is defined
+        by implementing the compare() method
+    - Classpath - parameter that specifies the locations where JVM should look for class files that are needed
+        by a running application. The Classpath can be set as an environment variable or passed as a command-line argument.
+        Classpath exception occurs when the JVM is unable to find the required class file in the specified Classpath locations.
+    - difference between String, StringBuffer and StringBuilder:
+        . String is an immutable class, which means that once a String object is created, its value cannot be changed
+        . StringBuffer and StringBuilder are mutable classes that can be used to perform string manipulation operations efficiently.
+            StringBuffer is thread-safe, while StringBuilder is not.
+    - Iterator is an interface that provides a way to iterate over a collection of objects, such as a List, Set, or Map.
+        It allows you to traverse the elements in a collection one by one and perform various operations on them.
+    - Rehashing - process when a HashMap reaches its maximum capacity, it will automatically resize itself to accommodate
+        more key-value pairs. It is necessary to maintain the performance of the HashMap. As the number of key-value pairs
+        in the map grows, the likelihood of hash collisions increases, which can slow down the performance of the map.
+    - If you need to maintain a specific ordering of the key-value pairs in a collection, you should consider
+        using a different data structure such as a LinkedHashMap, which maintains the insertion order of its elements,
+        or a TreeMap, which maintains a natural ordering of its elements based on their keys.
+    - static method is a method that is associated with the interface itself, rather than with any instance of the interface.
+        They can be called directly on the interface, without needing an instance of the class that implements it.
+    - default method is a method that has a default implementation in the interface. Classes that implement the interface
+        are not required to override the default method, but can choose to do so if they need to provide a different implementation
+    - The main purpose of static methods in interfaces is to provide utility methods that can be called directly
+        on the interface without needing an instance. The main purpose of default methods is to provide a default implementation
+        of an interface method that can be used by classes that implement the interface, without needing to override the method
+    - Concurrent Modification exception is a runtime exception that occurs when multiple threads try to modify a collection
+        (such as a list, set, or map) at the same time. The exception is thrown because the collection is not designed
+        to be modified by multiple threads simultaneously, and as a result, the collection's state can become inconsistent
+        To prevent a Concurrent Modification exception, you can use one of the following strategies:
+            . use the synchronized keyword to synchronize access to the collection, so that only one thread
+                can access the collection at a time
+            . Using a thread-safe collection, such as ConcurrentHashMap and CopyOnWriteArrayList
+            . Using an Iterator
+    - Serialization is the process of converting an object into a stream of bytes that can be stored or transmitted
+        over a network, and later reconstructed to create a new object with the same properties as the original.
+        The process of serialization is commonly used in Java for data persistence, inter-process communication, and distributed computing
+    - Garbage collection is a process in which a program's runtime system automatically manages memory allocation
+        and deallocation by freeing up memory that is no longer being used by the program.
+    - System.gc() is a method that is used to suggest to the JVM that it should run the garbage collector to free up unused memory.
+    - mark-and-sweep algorithm and parallel GC are one of the algorithms used in garbage collector mechanism
+    - Static methods and static variables in Java are stored in the Metaspace memory area
+
+
+Step 4. Multithreading
+    - Multithreading is a programming concept that involves the execution of multiple threads in a single process or program.
+        Is used to achieve concurrency in a program, which can lead to improved performance and responsiveness.
+        It also introduces new challenges, such as thread synchronization and race conditions.
+    - The main advantage of using a thread pool is that it allows multiple tasks to be executed concurrently
+        by reusing threads from a pool, rather than creating a new thread for each task.
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        executor.submit(() -> { doSomething(); }));
+        executor.shutdown();
+        The execute() method accepts a Runnable task, while the submit() method accepts both Runnable and Callable tasks
+    - Creating and destroying threads can be expensive in terms of memory and CPU usage.
+        Thread pools provide a way to reuse threads for multiple tasks
+    - Thread pools can improve the performance of a program by reducing the amount of time it takes to create and destroy threads
+    - The life cycle of a thread in a thread pool includes the following states:
+        . Idle - thread is created and is waiting for a task to be assigned
+        . Running - thread is executing a task
+        . Completed - thread has finished executing a task and is returned to the idle state
+    - Thread dump analysis in java:
+        . process of examining the state of threads in a Java program to identify and diagnose issues
+            such as deadlocks, high CPU usage, or performance bottlenecks
+        . thread dump is a snapshot of the state of all threads in a Java program.
+        . Look for threads that are blocked or waiting
+        . Pay attention to the stack traces of each thread
+    - Deadlock in Java is a situation that occurs when two or more threads are blocked
+        and waiting for each other to release the resources they hold
+        To prevent deadlocks, it's important to follow best practices for concurrent programming,
+        such as avoiding nested locks, acquiring locks in a consistent order, and using timeouts
+        on locks to avoid indefinite blocking
+    - Thread-local is a Java class that allows you to store data that is specific to a given thread
+    - volatile keyword in Java ensures that a variable's value is always read and written from/to main memory,
+        preventing thread-specific caching
+
+
+Step 5. Java 8
+    - Lambda expressions: A way to define and pass around blocks of code as if they were objects,
+        which allows for more concise, functional-style code.
+    - Functional interfaces: Interfaces that have exactly one abstract method, which allows for behaviour
+        parameterization and the ability to pass behaviour as a method argument.
+        Java 8 library has many functional interface such as:
+            . java.util.function.Function<T,R>: Represents a function that takes an argument of type T and returns an argument of type R.
+            . java.util.function.Consumer<T>: Represents an operation that takes a single input argument and returns no result.
+            . java.util.function.Predicate<T>: Represents a predicate (boolean-valued function) of one argument.
+            . java.util.function.Supplier<T>: Represents a supplier of results.
+    - Streams: A new API for processing collections of data that allows for operations such as filtering,
+        mapping, and reducing to be performed in a more functional and readable way.
+    - Date and time API: A new API for working with date and time, which replaces the legacy
+        java.util.Date and java.util.Calendar classes.
+    - Default methods - methods that have a default implementation in an interface. Introduced in Java 8 to allow
+        interfaces to be extended without breaking existing implementations
+    - Static methods - ability for interfaces to have static methods, which are methods that can be called
+        on the interface itself, rather than on an instance of the interface.
+    - Optional class is a container object which may or may not contain a non-null value
+    - intermediate and terminal operations:
+        . Intermediate operations are operations that are performed on a stream, but do not produce a final result,
+            eg. filter, map, and flatMap
+        . Terminal operations are operations that produce a final result or a side-effect,
+            eg. forEach, reduce, and collect
+    - Metaspace replaced PermGen. Metaspace is a region of memory that is used to store class metadata,
+        such as class names, field and method names, and method bytecode. Metaspace is part of the native
+        memory heap, which means that it is not limited by the maximum heap size
+    - G1 garbage collector as the default garbage collector. The G1 garbage collector is a concurrent
+        garbage collector, which means that it can collect garbage while the application is still running.
+    - new concurrent implementation of HashMap called ConcurrentHashMap
+    - Variables inside lambda functions are final in Java because it helps to prevent concurrency problems
+
+
+Step 6. Spring-Framework
+    - Dependency injection is a design pattern used in software development that involves separating
+        the creation of an object from its dependencies
+    - Inversion of Control (IoC) is a design pattern that allows control to be transferred from
+        the application code to an external container
+    - BeanFactory is the root interface for accessing a Spring container. It is the basic container
+        providing only configuration management
+    - ApplicationContext interface is a sub-interface of BeanFactory. It provides additional features such as
+        support for internationalization (I18N) messages, application-layer specific contexts such as
+        the WebApplicationContext for use in web applications
+    - application context is the top-level context that manages the entire Spring application, while the bean context
+        is a child context that manages a specific set of beans within the application. The application context is
+        responsible for configuring and managing the lifecycle of the entire application, while the bean context
+        only manages the beans within its scope.
+    - the most commonly used bean scopes in Spring Framework:
+        . singleton - the default scope for a bean. A singleton bean is created only once per Spring IoC container
+            and is shared by all the clients that request it.
+        . prototype - created every time it is requested by a client
+        . request - created for each HTTP request and is only available to the beans that are involved in handling that request.
+        . session - created for each HTTP session and is only available to the beans that are involved in handling that session.
+        . application - created for the entire lifetime of the web application, and is available to all beans throughout the application.
+        . websocket - created for the duration of a WebSocket session, and is available to all beans that are involved in handling that session.
+    - filters are a powerful way to add pre-processing and post-processing to requests and responses in a Spring web application.
+        They can be used for various purposes such as logging, authentication, encoding, compression, and caching
+    - Spring MVC is a popular web framework for building Java web applications. It provides a Model-View-Controller
+        architecture that separates the application logic into three components
+    - Design pattern used inside the spring framework:
+        . Inversion of Control - used throughout the Spring Framework to decouple the application code from the framework and its components.
+        . Singleton - used to ensure that there is only one instance of a bean created in the Spring IoC container
+        . Factory - used in Spring to create objects of different classes based on the configuration
+        . Observer - used in Spring to notify other beans of changes to the state of a bean
+    - If the singleton bean is stateless, it can handle multiple parallel requests without any issues, as it does not maintain any state.
+        If the singleton bean is stateful, and the state is shared among requests, it could lead to race conditions
+        and other concurrency issues if not designed properly
+    - What is the difference between Spring boot and spring?
+        Here are some reasons to choose Spring Boot:
+            . You want to quickly set up a stand-alone Spring application without needing to do a lot of configuration.
+            . You want to take advantage of pre-configured dependencies and sensible defaults.
+            . You want to easily deploy your application as a self-contained executable JAR file.
+
+
+Step 7. Spring-Boot
+    - the entry point of a web application is a class with the @SpringBootApplication annotation.
+        It's a combination of several other annotations, like @Configuration, @EnableAutoConfiguration, and @ComponentScan
+    - @Configuration annotation indicates that the class is a source of bean definitions for the application context.
+    - @EnableAutoConfiguration annotation tells Spring Boot to start adding beans based on classpath settings,
+        other beans, and various property settings.
+    - @ComponentScan annotation tells Spring to look for other components, configurations, and services in the package,
+        allowing it to find the controllers.
+    - @Component annotation is a fundamental annotation in the Spring Framework and is used in Spring Boot to mark
+        a class as a Spring-managed component. It can be used to create other annotations such as @Service, @Repository, and @Controller
+    - @Autowired annotation is used in Spring Boot to automatically wire beans together based on their dependencies.
+        When a class is annotated with @Autowired, Spring Boot automatically injects the dependent beans into the class
+    - @GetMapping annotation is used in Spring Boot to map HTTP GET requests to a method in a controller class. When a GET request
+        is received for a specific URL, Spring Boot looks for a method in the controller class annotated with @GetMapping
+        that matches the URL and executes the method
+    - @PostMapping annotation is used in Spring Boot to map HTTP POST requests to a method in a controller class. When a POST request
+        is received for a specific URL, Spring Boot looks for a method in the controller class annotated with @PostMapping
+        that matches the URL and executes the method.
+    - (@RequestBody InitializeRequest request) - used to tell Spring Boot to deserialize the request body into a InitializeRequest object.
+        This allows you to easily handle complex form data in your controller methods.
+    - (@PathVariable Long id) - used on the id parameter to extract the value of the id variable from the URL and use it in the method
+    - @Repository annotation is used in Spring Framework to indicate that the annotated class is a repository,
+        which is a class that provides data access operations
+    - @Service annotation is used in Spring Framework to indicate that the annotated class is a service, which is a class
+        that provides business logic operations or acts as an intermediary between the controller and the repository layers.
+    - @Controller annotation is used in Spring Framework to indicate that the annotated class is a controller, which is a class
+        that handles incoming web requests and returns an HTTP response
+    - @ComponentScan annotation is used in Spring to enable automatic scanning of packages for classes annotated with Spring's
+        stereotype annotations like @Component, @Service, @Repository, and @Controller. It tells Spring to search for and register
+        these classes as beans in the application context.
+    - @RestController annotation is a specialized version of @Controller. It combines @Controller and @ResponseBody annotations,
+        which means that all methods in a @RestController class return a response body directly to the client. This response body
+        is usually formatted as JSON or XML, and it can be a simple object, a collection, or any other serializable data.
+        @Controller is used for building web pages or returning views, where the response can be a view name or a ModelAndView object.
+        @RestController is used for building RESTful web services, where the response is serialized and returned as a response body.
+    - @ResponseBody - When a method is annotated with @ResponseBody, Spring will automatically convert the returned value
+        to JSON or XML and write it to the response body.
+    - How to exclude any configuration?
+        @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+        You can also exclude configurations via the application.properties or application.yml file
+    - What is spring-boot profile?
+        A profile is a set of configurations that can be used to customize an application's behaviour in various environments
+        such as development, production, or testing.
+        You can activate a profile by specifying it as a command-line argument or by setting the "spring.profiles.active"
+        property in your application's configuration file
+    - Aspect-Oriented Programming - programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns.
+    - @Transactional - used to mark methods or classes as transactional. When a method or class is marked with this annotation,
+        the Spring Framework will automatically start and commit a transaction before and after the method is called
+    - JWT - compact, URL-safe means of representing claims to be transferred between two parties. It is often used to
+        authenticate users and exchange information securely. JWT consists of three parts: a header, a payload, and a signature.
+        It's important to note that, JWT tokens are stateless, which means that the server does not need to maintain a session
+        or other state for the client. This makes JWT tokens an attractive option for RESTful APIs and Single Page Applications
+        (SPAs) that need to authenticate and authorize users.
+    - OAuth 2.0 is an authorization framework that lets users grant applications access to their data on other websites or services,
+        without sharing their password with the application, eg. connect your Facebook account to a new fitness app.
+
+
+
+Step 8. Microservice
+Features of Microservice:
+    - Decoupling - Services within a system are largely decoupled, so the application as a whole can be easily built,
+        altered, and scaled.
+    - Business Capabilities - Microservice are very simple and focus on a single capability
+    - Autonomy - Developers and teams can work independently of each other, thus increasing speed
+    - Continuous Delivery - Allows frequent releases of software through systematic automation of software creation,
+        testing, and approval
+    - Agility - Microservice support agile development. Any new feature can be quickly developed and discarded again
+
+Disadvantage of Microservice architecture:
+    - Complexity: The overall architecture can become complex, especially when dealing with the coordination of many small services
+    - Increased operational overhead: Managing and deploying many small microservices can increase operational overhead,
+        such as monitoring and testing.
+    - Network latency: Communication between microservices can add network latency and reduce performance if not properly optimized
+    - Inter-service dependencies: Inter-service dependencies can become complex and difficult to manage, especially when
+        dealing with many small services.
+    - Difficulties in testing: Testing can become more complex and time-consuming with a large number of microservices
+
+12-factor methodology to build a Microservice:
+    1. Codebase: One codebase per app, with multiple deploys
+    2. Dependencies: Explicitly declare and isolate dependencies
+    3. Config: Store config in the environment
+    4. Backing services: Treat backing services as attached resources
+    5. Build, release, run: Strictly separate build and run stages
+    6. Processes: Execute the app as one or more stateless processes
+    7. Port binding: Export services via port binding
+    8. Concurrency: Scale out via the process model
+    9. Disposability: Maximize robustness with fast start-up and graceful shutdown
+    10. Dev/prod parity: Keep development, staging, and production as similar as possible
+    11. Logs: Treat logs as event streams
+    12. Admin processes: Run admin/management tasks as one-off processes
+
+How to connect internal and external services in microservices:
+    - API Gateway: An API gateway acts as a single entry point for all external requests, forwarding them to the appropriate
+        microservice for handling. The gateway can also perform tasks such as authentication, rate limiting, and caching.
+    - Service Discovery: In this pattern, Microservice register themselves with a central registry, and clients use
+        the registry to find the location of the Microservice they need to interact with. This can be done using
+        a technology such as DNS or a dedicated service discovery tool like Eureka or Consul
+    - Load Balancer: A load balancer distributes incoming requests to multiple instances of a Microservice, improving
+        reliability and scalability. Load balancing can be performed by a dedicated load balancing tool, or it can be
+        built into the API gateway
+    - Circuit Breaker: A circuit breaker is a pattern that helps prevent cascading failures in a Microservice architecture
+        by adding resilience to communication between Microservice. The circuit breaker acts as a proxy between the client
+        and the Microservice, monitoring the health of the Microservice and failing over to a backup instance if necessary.
+    - Event-Driven Architecture: In this pattern, Microservice communicate with each other using events, rather than
+        direct requests. This can help decouple Microservice and reduce the coupling between them
+    - CQRS: CQRS (Command Query Responsibility Segregation) is a pattern that involves separating the responsibility
+        of handling read and write operations into separate services
+
+Patterns like Circuit Breaker, Saga, CQRS
+
+
+
+Step 9. Memory management in Java
+    - Memory leaks can be caused by a variety of issues, such as incorrect object references, failure to close resources,
+        or using third-party libraries that have memory leaks
+    - "Out of Memory" error in Java occurs when the application requests more memory from the JVM than is available
+
+
+Step 10. REST
+    - REST (Representational State Transfer) is an architectural style for building web services
+    - idempotent methods are HTTP methods that can be safely called multiple times without changing the result
+        beyond the initial application of the method.
+        On the other hand, non-idempotent methods, such as POST, can have side effects and should be called only once.
+    - What are the standards to follow to build a rest service?
+        . Use HTTP Verbs: RESTful services should use HTTP verbs such as GET, POST, PUT, and DELETE to perform operations on resources
+        . URI Design: RESTful URIs should be designed to identify resources and their relationships
+        . Use HTTP Status Codes: RESTful services should use appropriate HTTP status codes to indicate the result
+            of an operation, such as 200 OK for success, 404 Not Found for a missing resource
+        . Use HATEOAS: RESTful services should use HATEOAS (Hypermedia as the Engine of Application State) to allow clients to discover
+            and interact with resources. HATEOAS uses links in the response to provide information about available actions and resources
+        . Statelessness: RESTful services should be stateless, meaning that they do not maintain client state between requests.
+            This helps to improve scalability and reliability, as it eliminates the need for server-side state storage.
+        . Security: RESTful services should be secure, with appropriate measures taken to prevent unauthorized access
+    - The header is part of an HTTP request and contains metadata about the request, such as the type of request,
+        the format of the payload, and the authentication credentials.
+    - How to secure REST API?
+        . Authentication: This is the process of verifying the identity of the client.
+        . Authorization: This is the process of determining whether a client is allowed to perform a specific action on a resource
+        . Encryption: This is the process of protecting data in transit by encrypting it. REST APIs can use HTTPS to encrypt
+            the data transmitted between the client and the server.
+        . Validation: This is the process of validating the input data to ensure that it meets certain criteria
+        . Rate Limiting: This is the process of limiting the number of requests that a client can make to an API within
+            a certain time period. This can help prevent Denial of Service (DoS) attacks.
+    - How to pass a parameter in request, is it via URL or as a JSON object?
+        . via URL: http://example.com/api/users?name=john&age=30
+            + Passing parameters via URL is easy to understand and implement, and the parameters can be easily bookmarked or shared.
+            - Passing sensitive data via URL is not secure as it can be easily intercepted and viewed by third parties.
+        . as JSON: { "name": "john", "age": 30 }
+            + passing parameters as a JSON object in the request body is more secure as it is not visible in the URL
+            - it may require more effort to implement
+
+
+Step 11. Design Pattern & System Design  //TODO p. 232 -----------------------------------------------------
+
+
+Step 12. SQL/Database/Hibernate-JPA  //TODO p. 242 -----------------------------------------------------
+
+
+Step 13. Coding  //TODO p. 261 -----------------------------------------------------
+
+
+
+Step 14. Scenario-Based
+    - How would you store millions of records in a table?
+        . Partitioning: Partitioning the table into smaller, more manageable chunks, based on a specific criterion,
+            can improve the performance and scalability of the system. For example, you can partition the data by date,
+            so that each partition contains data for a specific time range.
+        . Sharding: Sharding is a method of distributing the data across multiple databases to increase the scalability
+            and performance of the system.
+        . Denormalization: You can denormalize the data by duplicating data across multiple tables to reduce the number
+            of joins required to retrieve the data.
+        . Indexing: Indexing the columns used in the queries can improve the query performance and reduce the response time.
+        . In conclusion, handling high latency in a microservice requires a combination of monitoring, optimization,
+            scaling, caching, and load balancing.
+    - Designing an application to handle millions of requests requires careful consideration of various factors
+        such as scalability, performance, reliability, and security:
+        . Use a load balancer - distributes incoming requests across multiple servers to ensure that no single server gets overwhelmed
+        . Use a distributed cache - can help reduce the load on the database by storing frequently accessed data in memory.
+        . Optimize database performance: Databases are often a bottleneck in highly scalable applications. To optimize
+            database performance, use techniques like indexing, caching, and partitioning
+        . Implement asynchronous processing - the application can handle multiple requests at the same time,
+            improving performance and scalability.
+        . Implementing caching can help reduce the load on servers by serving frequently accessed content from a cache
+            instead of generating it dynamically each time
+        . Use Content Delivery Network (CDN): CDN is a network of servers that can distribute content globally,
+            delivering it from the closest server to the user, thus reducing the latency and improving the application's performance.
+        . Use containers and orchestration tools: Containers like Docker can help to package applications and their dependencies,
+            allowing them to be deployed and scaled quickly. Orchestration tools like Kubernetes or Docker Swarm can automate
+            the deployment and management of containers.
+        . Monitor and optimize: Monitor the application's performance and usage patterns and optimize the infrastructure
+            accordingly. Implementing logging, monitoring, and alerting can help detect issues and optimize performance in real-time.
+
+
+Step 15 Java Features from Java 8 till Java 21 with example //TODO p. 303 -------------------------
+
+
+Step 16 KAFKA  //TODO p.336 -------------------------
+
+
+Step 17 Miscellaneous  //TODO p.342 -------------------------
+
+

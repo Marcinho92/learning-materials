@@ -1,0 +1,59 @@
+
+
+Zapytalam Darka Z. o to tesco i rekru tak mi napisal:
+- jeśli chodzi o sam coding to zarówno na SDE2 i 3 jest podobny level jeśli chodzi o oczekiwania. Jest to faktycznie pisanie kodu.
+	Czasu jest około 1h i ma to wystarczyć na dogadanie się co do samego zadania i wykonanie ćwiczenia.
+	Oceniane jest dosłownie wszystko od zdolności komunikacyjnych przez warsztat i faktycznie często jest to odbierane jako czepialstwo,
+	ale o springa czy o jakieś biblioteki nikt tutaj nie pyta. Czysta algorytmika i good practices
+- coding - pytać o zadanie, rozmawiać z interviewerem. TDD, płynna komunikacja, pisać i mówić, podejście iteracyjne. Simple solution first, etc
+
+- leadership - tutaj rozmowa miękka w zalezności od prowadzącego może być różnie, ale generalnie powinno być ok.
+	Nic strasznego i tutaj nie da się przygotować. Po prostu, ale jest culture fit, albo nie
+		. tell about some conflict with someone, how would you manage conflict
+		. tell about greatest success
+		. w jaki sposób się rozwijasz, uczysz nowych rzeczy; czy nowe umiejętności wykorzystujesz w projektach w pracy
+		. w jaki sposób jesteś oceniany w pracy
+		. jakis trudny problem, sytuacja, które dużo cię nauczyły
+		. w jaki sposób przekazujesz/przyjmujesz trudny feedback
+
+- system design - podobnie jak coding. Rozmawiamy, nie robimy założeń tylko dopytujemy. Dobrze by było wiedzieć nieco o
+	. good practices przy projektowaniu API, baz danych,
+	. CAP theorem:
+		Mówi ona, że nie da się stworzyć bazy, która jest równocześnie spójna (Consistency), dostępna (Availaibity) oraz odporna na awarie
+		poszczególnych węzłów bądź przerwanie połączenia między nimi (Partition tolerance).
+			. Consistency - oznacza, że każda operacja odczytu zwraca najnowszy zapis danych,  niezależnie od tego, z której części systemu pochodzi
+			. Availability - gwarantuje, że każde żądanie otrzyma odpowiedź, niekoniecznie jednak z najnowszymi danymi.
+			. Partition Tolerance - oznacza zdolność systemu do kontynuowania pracy nawet w przypadku awarii komunikacji między węzłami
+	- ACID:
+		. Atomicity - commit all or nothing
+		. Consistency - consisten state A -> consistent state B
+		. Isolation - concurrent transactions are isolated from each other
+		. Durability - data is persisted after transaction is commited even if a system failure
+	- BASE:
+		. Basically Available - availability over consistency
+		. Softe State
+		. Eventual consistency
+
+
+	. różnice pomiędzy SQL, noSQL, Mongo a Cassandra, kiedy jaka baza, etc...
+		. SQL - 	pros: structured data, ACID
+					cons: schema has to be known in advance, difficult to scale especially for write operations
+		. NoSQL - 	pros: flexible, data sharding, easy scalling
+					cons: loss of consistency,
+
+	Na youtube niech szuka Amazon Software Dev interview example
+
+	. dostałem wczoraj system do wydawania kuponów, gdzie miałem się skupić na funkcjonalności do zapewnienie,
+		że jeden kupon może być użyty tylko określoną liczbę razy. Z takich wymagań konkretnych to
+			wysokie availability 99,999,
+			response poniżej 100ms,
+			założenie że będzie 2000tps i coś tam jeszcze
+	. albo dają system paczkomatów do rozkmin
+
+
+
+
+
+
+
+

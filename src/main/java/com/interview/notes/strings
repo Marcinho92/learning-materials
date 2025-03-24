@@ -1,0 +1,8 @@
+"O".repeat(10)
+Character.getNumericValue('1')
+sb.toString().replaceFirst("^0*", "")
+
+String[] word1, String[] word2
+String string1=String.join("",word1);
+String string2=String.join("",word2);
+

@@ -1,0 +1,89 @@
+0. Mutex (Mutual Exclusion)
+    - acquiring - entering the critical section
+    - releasing - leaving the critical section
+
+1. Parameter this in the synchronized block. This is the monitor object.
+    The code inside the block gets synchronized on the monitor object. Simply put,
+    only one thread per monitor object can execute inside that code block.
+
+2. The lock behind the synchronized methods and blocks is a reentrant. This means the current thread
+    can acquire the same synchronized lock over and over again while holding it
+
+3. yield(), wait(), notify(), notifyAll(), join(), sleep()
+
+4. volatile - ensure that updates to variables propagate predictably to other threads.
+    Using it we can communicate with runtime and processor to not reorder any instruction involving the volatile variable.
+    Also, processors understand that they should immediately flush any updates to these variables.
+
+5. For multithreaded applications, we need to ensure a couple of rules for consistent behaviour:
+        - Mutual Exclusion – only one thread executes a critical section at a time
+        - Visibility – changes made by one thread to the shared data are visible to other threads to maintain data consistency
+    synchronized methods and blocks provide both of the above properties at the cost of application performance.
+    volatile is quite a useful keyword because it can help ensure the visibility aspect of the data change
+    without providing mutual exclusion. Thus, it’s useful where we’re ok with multiple threads executing
+    a block of code in parallel, but we need to ensure the visibility property.
+!!! Technically, any write to a volatile field happens-before every subsequent read of the same field. This is the !!!
+
+6. Future class represents a future result of an asynchronous computation. This result will eventually appear
+    in the Future after the processing is complete.
+
+7. The difference between get(long, TimeUnit) and get() is that the former will throw a TimeoutException
+    if the task doesn’t return before the specified timeout period.
+
+8. ForkJoinTask is an abstract class which implements Future, and is capable of running a large number of tasks
+    hosted by a small number of actual threads in ForkJoinPool.
+
+9. The ThreadLocal construct allows us to store data that will be accessible only by a specific thread.
+    ThreadLocal<Integer> threadLocalValue = new ThreadLocal<>();
+    To avoid surprising consequences in highly concurrent applications it's good practice
+    to extend the ThreadPoolExecutor class and provide a custom hook implementation for the beforeExecute() and afterExecute() methods
+
+10. During their lifecycle, threads go through various states:
+    - New - The thread is created but has not started execution.
+    - Runnable - The thread is executing or ready to execute.
+    - Blocked - The thread is waiting to acquire a lock.
+    - Waiting - The thread is waiting indefinitely for another thread to perform an action.
+    - Timed_waiting - The thread is waiting for a specified time for another thread to perform an action.
+    - Terminated - The thread has completed execution.
+
+11. ThreadPoolExecutor is an extensible thread pool implementation with lots of parameters and hooks for fine-tuning.
+    Main configuration parameters - corePoolSize, maximumPoolSize and keepAliveTime.
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+
+    ExecutorService interface has three standard implementations:
+    - ThreadPoolExecutor — for executing tasks using a pool of threads. Once a thread is finished executing the task,
+        it goes back into the pool. If all threads in the pool are busy, then the task has to wait for its turn.
+    - ScheduledThreadPoolExecutor allows to schedule task execution instead of running it immediately when a thread is available.
+        It can also schedule tasks with fixed rate or fixed delay.
+    - ForkJoinPool is a special ExecutorService for dealing with recursive algorithms tasks. If you use a regular
+        ThreadPoolExecutor for a recursive algorithm, you will quickly find all your threads are busy waiting
+        for the lower levels of recursion to finish. The ForkJoinPool implements the so-called work-stealing algorithm
+        that allows it to use available threads more efficiently.
+
+12. Calling wait() forces the current thread to wait until some other thread invokes
+    notify() or notifyAll() on the same object. For this, the current thread must own the object’s monitor.
+
+13. - wait() is an instance method that’s used for thread synchronization. it can only be called from a synchronized block.
+        It releases the lock on the object so that another thread can jump in and acquire a lock.
+    - sleep() is a static method that can be called from any context. Thread.sleep() pauses the current thread
+        and does not release any locks.
+
+14. When we invoke the join() method on a thread, the calling thread goes into a waiting state. It remains in a waiting state
+    until the referenced thread terminates.
+
+15. Different ways to implement a mutex:
+    - using 'synchronized' keyword - on method, code block
+    - ReentrantLock mutex = new ReentrantLock(); mutex.lock(); mutex.unlock();
+    - Semaphore - allows a fixed number of threads to access a critical section,
+        Semaphore mutex = new Semaphore(1); mutex. acquire(); mutex.release();
+
+16. CountDownLatch jest używany do sygnalizowania rozpoczęcia i zakończenia
+        . startSignal() zapewnia, że wszystkie wątki (zawodnicy) rozpoczną działanie w tym samym momencie
+        . doneSignal() jest używany do czekania, aż wszystkie wątki zakończą swoje zadania
+
+    Semaphore ogranicza dostęp do określonej liczby zasobów:
+        . acquire() zmniejsza licznik semafora
+        . release() zwiększa licznik, co oznacza, że zasób jest dostępny ponownie
+
+
+

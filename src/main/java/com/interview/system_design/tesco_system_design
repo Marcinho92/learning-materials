@@ -1,0 +1,49 @@
+1. Requirements:
+- get list of stores with info about amount of products //not relevant
+- get list per location (one shop) // productId, locationId -> { amount: 100 }
+- get items per country
+- get items nearby eg. 50km
+- remove product - number of certain product has decreased
+- add product - number of certain product has increase
+- handle failure
+
+2. Schema
+store: [
+{
+	id: string,
+	country: string,
+	locationId: string,
+	latitude: double,
+	longitude: double,
+	products: [
+		id: string,
+		amount: integer
+	]
+}
+]
+
+3. API
+GET /products/{id}?location=locationId
+RS: 100
+
+GET /products/{id}?country=country
+RS: 1000
+
+4. Questions:
+Dokładniejsze doprecyzowanie wymagań, przypadków brzegowych.
+Uwzględnienie wymagania odnośnie fault tolerance (dodanie Load Balancera, replikacja bazy, itp.)
+Why id as mandatory? Why locationId, countryId as not mandatory?
+Brak uwzględnienia wersjonowania API
+Which API, why REST?
+API wasn't completely RESTful
+Why use GET or POST to send data?
+Authentication in REST APIs
+How secure the data? How HTTPS, TLS works?
+How authenticate user with session and with JWT?
+Which DB, why Mongo or Postgres?
+CAP - describe and give examples of systems: CA, CP and AP
+Deploy app as a jar or how else? (as a container using docker, docker compose, k8s, diff between Pod vs. Node)
+Deploy on private server or to cloud, why?
+
+
+

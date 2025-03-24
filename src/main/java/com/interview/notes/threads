@@ -1,0 +1,301 @@
+https://www.udemy.com/course/java-multithreading/learn/lecture/108987#overview
+https://www.udemy.com/course/java-multithreading-concurrency-interview-practice-exams/learn/quiz/5162944/results?expanded=1333682133#overview
+https://www.baeldung.com/java-concurrency
+https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html
+https://www.interviewkickstart.com/blogs/interview-questions/java-multithreading-interview-questions
+https://testbook.com/interview/java-concurrency-interview-questions
+https://howtodoinjava.com/interview-questions/java-concurrency-interview-questions/
+https://www.educative.io/courses/java-multithreading-for-senior-engineering-interviews/atomicinteger
+
+
+
+
+0. Possible problem:
+    - Race condition
+    - Deadlock
+    - Livelock - Each process checks whether the other process is in an active state. If so, then it hands over
+        the resource to the other process
+    - Starvation - thread cannot get access to resources because other threads block it
+    - Incorrect synchronization
+    - Visibility issues - solution is eg. using volatile
+
+
+1. Threads:
+    - Responsiveness achieved by concurrency
+    - Performance achieved by parallelism
+
+Multithreaded application process:
+	- common: files, data (heap), code,
+    - separate per thread: stack (local variables), instruction pointer (address of the next instruction to execute)
+
+Threads scheduling: Dynamic Priority = Static Priority (set by dev) + Bonus (set by operating system in every epoch for each thread)
+
+
+2. Threads fundamentals - thread creation
+Thread class capabilities:
+    - thread.setName("name") - ustawienie nazwy
+    - thread.setPriority(Thread.MAX_PRIORITY) - ustawienie priorytetu
+
+Threads states:
+    - New - The thread is created but has not started execution.
+    - Runnable - The thread is executing or ready to execute.
+    - Blocked - The thread is waiting to acquire a lock.
+    - Waiting - The thread is waiting indefinitely for another thread to perform an action.
+    - Timed_waiting - The thread is waiting for a specified time for another thread to perform an action.
+    - Terminated - The thread has completed execution.
+
+
+
+3. Threads Coordination
+Thread termination:
+    - to clean up the thread's resources
+    - to stop thread when it misbehave
+    - to allow application to stop
+
+We terminate thread:
+    - using method thread.interrupt()
+    - inside run() method we check if Thread.currentThread().isInterrupted()
+
+Deamon thread:
+    - background task that shouldn't prevent our application from terminating, eg. saving file in text editor
+    - we create deamon using method thread.setDeamon(true)
+
+We can coordinate threads:
+    - by method thread.join()
+    - thread.join(2000) - can wait for thread max 2sec
+
+    for (Thread threads: thread) {
+        thread.join();
+    }
+
+
+4. Performance Optimization
+    - latency
+    - throughput
+
+
+Thread Pooling: creating thread once and reuse it many times
+    - Executors.newFixedThreadPool(numberOfThreads);
+    Runnable task = ...;
+    executor.execute(task);
+
+
+5. Data Sharing between threads
+    - stack:
+        methods,
+        arguments,
+        local variables,
+        references to objects (unless they are class members)
+
+    - heap:
+        shared memory that belong to process,
+        Objects (created with new),
+        members of classes,
+        static variables
+        is managed by garbage collector, Objects stay as long as long we have a reference to object
+        objects are always allocated on heap,
+        reference can be allocated on heap if object is member of class
+
+
+Resource sharing between threads:
+    - Atomic Operation: set of operation that for rest of the system looks like it's only one operation
+
+
+
+6. The Concurrency Challenges
+    - Locking mechanism
+        synchronized in method declaration
+        synchronized (lockingObject) {...} where lockingObject can be eg. just new Object();
+        synchronized block is Reentrant - a thread can't prevent itself from entering a critical section
+        If both methods are synchronized then when one of them is executed by one thread, all other synchronized methods of the same object become inaccessible to other threads
+
+
+Atomic operations:
+    - assignment to int, short, byte, float, char, boolean
+    - assignment to references
+    - assignment to double and float with volatile
+
+Non atomic operations:
+    - assignment to long, double
+
+
+If instructions in method don't depend on each other then compiler is free to re-arrange the order of instructions.
+
+
+
+Deadlock conditions:
+    - Mutual Exclusive
+    - Hold and Wait
+    - Non-preeamptive allocation
+    - Circular wait
+
+
+Solutions to avoid deadlock:
+    - avoid circular wait - enforce a strict order in lock acquisition
+
+
+
+7. Advanced Locking
+    - ReentrantLock:
+        - works just like a synchronized keyword applied on an object
+        - requires explicit locking and unlocking
+        - we need to remember to unlock in finally section
+        - we reward with better control over lock and more lock operations, eg:
+            - getQueuedThreads() - list of threds waiting to acquire a lock
+            - getOwner() - thread that currently owns the the lock
+            - isHeldByCurrentThread() - if the lock is held by current thread
+            - isLocked() - if the lock is held by any thread
+        - can enforce fairness by using: ReentrantLock(true), but it may reduce the throughput of the application
+        - lockInterruptibly():
+            - watchdog for deadlock detection and recovery
+            - waking up threads to do a clean and close the application
+        - tryLock() - normally if lock is unavailable thread has to wait. With tryLock() we can implement additional logic for that case
+                        Very usefull eg. whet we don't want to block our UI
+
+    - ReentrantReadWriteLock - allows eg. lock resource only for writing. Reading will be allowed for all threads. Usefull:
+        - when read operations are predominant
+        - when read operations are slow
+        - when reading negatively impacts the performance
+
+
+
+8. Inter-thread Communication
+    - Semaphore:
+        - unlike lock that allows only one "user" per resource, semaphore can restrict any given number of users to a resource
+            eg. parking lot with 8 spaces that allows only 8 car at the same time
+            new Semaphore(NUMBER_OF_PERMITS);
+            semaphore.acquire(5); //NUMBER_OF_PERMITS - 5 now available
+            semaphore.release(5); //NUMBER_OF_PERMITS now available
+
+            acquire() sprawdza czy jest wolne miejsce, jeśli tak to je zajmuje i leci dalej z wykonaniem. Jeśli nie to czeka aż inny wątek wykona release()
+            release() zwalani miejsce dla innego wątku
+
+        - can be released by any thread so shouldn't be used insted of Lock
+        - usefull in Producer Consumer scenario: prevent Producer from producing new item before Consumer consume current item
+
+    - Condition:
+        - Condition condition = lock.newCondition();
+            condition.await();     //wait for signal from other thread
+            condition.signal();    //gives signal to other thread to stop waiting and continue work
+            condition.signalAll(); //broadcast a signal to all threads currently waiting on the condition variable
+
+    - wait() - curent thread wait until another thread wake it up
+    - notify() - wakes up a single thread waiting for that object
+    - notifyAll() - wakes up all threads waiting for taht object
+
+
+
+9. Lock-free algorithms, data structures and techniques
+Atomic instructions:
+    - read/assignment on all primitive types (except for long and double)
+    - read/assignment on all references
+    - read/assignment on volatile long and double
+    - classes in java.util.concurrent.atomic package
+
+AtomicInteger:
+    - AtomicInteger atomicInteger = new AtomicInteger(0);
+    - incrementAndGet() and getAndIncrement(), decrementAndGet() and getAndDecrement()
+    - used as a tool for concurrent counting, without the complexity of using a lock
+
+CAS - compare and set operation:
+    - atomicReference.compareAndSet(oldValue, newValue); //if true then set new value, otherwise do nothing
+
+
+
+10. Threading Models for High Performance IO
+
+Thread Pooling - eliminate the overhead of creating, starting and shutting down a new thread for every task
+CPU is not involved in long IO operations
+
+
+ExecutorService executorService = Executors.newCachedThreadPool(); //no limit for number of threads, may be dangerous
+ExecutorService executorService = Executors.newFixedThreadPool();
+executorService.submit(new Runnable() {
+    public void run() {
+         //long blocking IO operation
+    }
+});
+
+Threadshing - a situation where most of the CPU is spent on the OS managing the system
+Non-Blocking IO - when we wait for response 1 we can handle request 2
+
+
+
+11. Virtual Threads and Hight-Performance IO
+Virtual Thread:
+	- not managed by OS
+    - doesn't have common stack
+    - cheap and fast to create in large quantities
+    - is mounted on Platform Thread that becomes CarrierThread
+    - after work is unmounted from Carrier Thread and garbage collected
+    - useful for eg. blocking IO operations. No context switches as all virtual threads use can use one Carrier Thread.
+
+Thread.ofPlatform().unstarted(runnable); //normal thread
+Thread.ofVirtual().unstarted(runnable); //virtual thread
+Executors.newVirtualThreadPerTaskExecutor(); //preffered way to use Virtual Threads
+
+
+
+------ Test 1 ------
+- Line of code will always trigger the thread to stop executing on the CPU
+    and cause the operating system to perform a context switch:
+        . Thread.sleep(2000)
+        . this.wait()
+        . LockSupport.parkNanos(1000000)
+    A hint to the scheduler that the current thread is willing to yield its current use of a processor.
+    The scheduler is free to ignore this hint.
+
+- Which of the following is a blocking call? (or a potentially blocking call)
+        . Thread.sleep(2000)
+        . this.wait()
+        . synchronized(this) {...}
+        . lockObject.lock();
+        . thread.join();
+
+- When a thread is sleeping, it goes into TIMED_WAITING state
+
+- Which of the following methods will bring the thread into a WAITING state?
+        . Object.wait()
+        . LockSupport.park()
+        . Thread.join()
+
+
+------ Test 2 ------
+- Thread.sleep(2000) is more accurate adn efficient than 2000 x Thread.sleep(1)
+- Thread pool:
+        . minimizes the time overhead of creating new threads
+        . minimizes the time between starting the thread and the OS scheduling that thread to run
+        . already comes with a thread safe queue where tasks can be stored before being executed by
+            one of the threads, and we don’t need to implement one on our own
+
+
+------ Test 3 ------
+- Only when we have a pair of methods that lock the same locks but in an opposite order,
+    we might get a deadlock. Note that the unlocking order is not important.
+- This reordering is an internal compiler optimization and can be fixed by making the member variables volatile
+- Volatile:
+        . Makes assignments to double and long atomic
+        . Ensures that all threads see consistent value of a variable
+        . Disables compiler optimizations that may lead to data races
+
+
+------ Test 4 ------
+- private final Lock lock = new ReenterantLock();
+- private Condition started = lock.newCondition();
+- So, if xMultiplier takes 20 seconds to complete, yMultiplier takes 40, and yMultiplier takes 60,
+    the main thread will wait 20 seconds on each Thread.join() call:
+        xMultiplier.join(20000);
+        yMultiplier.join(20000);
+        zMultiplier.join(20000);
+- private final Semaphore sem = new Semaphore(5);
+    . Since the semaphore is initialized with five permits, that's how many threads
+        can acquire the semaphore and enter the "some logic"
+- Locks are not designed for inter-thread communication. Locks can only be unlocked
+    by the lock owner (the thread that successfully acquired the lock).
+
+
+
+
+
+
+

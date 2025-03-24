@@ -1,0 +1,172 @@
+0.  grid.set(1, "value");
+    grid.replaceAll(row -> "O".repeat(10));
+
+    Map<Character, Integer> chars = new HashMap<>();
+    chars.getOrDefault('b', 0)
+
+map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+
+
+
+https://medium.com/@harendrakumarrajpoot5/top-50-java-collections-interview-questions-you-need-to-know-e55fcdc8dbfb
+https://medium.com/@tykari/java-collections-and-performance-comparing-common-operations-across-implementations-c284d77f3f58
+
+
+1. Generic
+Iterable:
+    - Collection:
+        - List:
+            - ArrayList
+            - LinkedList
+            - Vector:
+                - Stack
+        - Queue:
+            - PriorityQueue
+            - Dequeue:
+                - ArrayDeque
+        - Set:
+            - HashSet
+            - TreeSet
+            - LinkedHashSet
+
+Map:
+    - SortedMap:
+        - TreeMap
+    - HashMap
+    - HashTable
+    - LinkedHashMap
+
+
+2. Iterator
+It is a Cursor in Java which is used to iterate a collection of objects:
+    - Traverse a collection object elements one by one
+    - Supports READ and REMOVE Operations
+    - Known as Universal Java Cursor as it is applicable for all the classes of the Collection framework
+
+
+3. List
+List allows duplicate elements
+List maintains the order of elements as they are added to the list
+List provides indexed access to its elements using an integer index
+List provide ways to iterate over their elements and the order of iteration is guaranteed
+
+    - ArrayList
+        . effective for data storage and access
+        . based on a dynamic array
+        . allocates memory in chunks
+        . provides fast random access to elements using an index
+        . is slower for inserting or deleting elements in the middle of the list, because it requires shifting elements to fill the gap
+        . is faster for iterating over all elements in the list, because it can use an index to access elements directly
+    - LinkedList
+        . effective for data manipulation
+        . based on a doubly-linked list
+        . allocates memory for each element separately
+        . provides slower access because it needs to traverse the list from the beginning or end to reach a specific element
+        . is faster for inserting or deleting elements, because it only requires updating the links between nodes
+        . is slower for iterating over all elements in the list, because it needs to traverse the list using its links.
+    - Vector
+    - CopyOnWriteArrayList
+        . thread-safe implementation of the List interface that provides efficient and scalable access to elements,
+            and allows concurrent iteration over the list without the risk of ConcurrentModificationException
+
+4. Queue
+    - PriorityQueue
+        . orders its elements according to their natural ordering or a custom comparator
+        . elements are stored in a heap data structure
+        . should be used when you need to maintain a priority order of elements and access them in a FIFO order
+
+        . Min Heap: --> to keep the min element always on top, so you can access it in O(1).
+          PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
+
+          Max Heap: --> to keep the max element always on top, the same order as above.
+          PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+
+    - ConcurrentLinkedQueue
+        . thread-safe implementation of the Queue interface that provides efficient and scalable access to
+            a queue of elements, and allows multiple threads to add and remove elements concurrently.
+
+
+5. Set
+How does HashSet works internally?
+ConcurrentHashSet - thread-safe Set
+Set does not allows duplicate elements
+Set does not guarantee any specific order of elements
+Set does not provide indexed access to its elements using an integer index
+Set provide ways to iterate over their elements but the order of iteration is not guarantee
+
+    - HashSet
+        . unordered collection of unique elements
+        . uses a hash table to store the elements, which allows for constant-time performance for basic operations
+            such as add, remove, and contains.
+        . to get the values in a HashSet in Java, you can use an iterator or a for-each loop.
+    - TreeSet
+        . ordered collection of unique elements
+        . implemented as a self-balancing binary search tree, which allows for log(n) performance for basic operations
+            such as add, remove, and contains.
+    - LinkedHashSet
+        . maintain the order of elements in a collection
+    - Enum Set
+        . specjalną implementacją Set przeznaczoną do pracy z typami wyliczeniowymi (enum).
+
+
+6. Map
+How does HashMap work internally? Explain the internal implementation of HashMap.
+
+    - HashMap
+        . put(), remove(), containsKey(), get() - O(1) w przeciętnym przypadku. Może wzrosnąć do O(n) w przypadku
+            dużej liczby kolizji hashcode'ów.
+        . provides constant-time performance for most operations, such as put(), get(), and containsKey()
+        . don't preserve ordering, order of the elements in a HashMap is not guaranteed
+        . not synchronized,
+        . one null key and null values available,
+        . fail-fast - if the HashMap is modified while an iteration over the HashMap is in progress in any way except through
+            the iterator's own remove method, the iterator will throw a ConcurrentModificationException.
+        . faster than Hashtable duo to no synchronization
+    - ConcurrentHashMap
+        . put(), remove(), containsKey(), get() - O(1) w przeciętnym przypadku. Może wzrosnąć do O(n) w przypadku
+            dużej liczby kolizji hashcode'ów.
+        . thread-safe, which means that all its methods are thread-safe
+        . allow multiple threads to access and modify the map concurrently without the need for external synchronization
+        . Weakly consistent - iterator may reflect some, but not necessarily all, of the changes made to the map
+            since the iterator was created.
+        . To modify a ConcurrentHashmap, it is generally recommended to use the map's built-in thread-safe methods,
+            such as putIfAbsent, replace, or remove. These methods are designed to handle concurrent modifications
+            to the map safely, without requiring the use of iterators
+    - HashTable
+        . synchronized,
+        . no null keys and values available,
+        . not fail-fast
+        . legacy class (since Java 5, ConcurrentHashMap is the recommended alternative for a thread-safe Hashtable)
+    - LinkedHashMap
+        . put(), remove(), containsKey(), get() - O(1) w przeciętnym przypadku. Może wzrosnąć do O(n) w przypadku
+            dużej liczby kolizji hashcode'ów.
+        . is able to maintain the insertion order of keys by using a doubly-linked list to store its entries
+        . provides a predictable iteration order, which is the order in which the entries were added to the map
+        . slightly slower than HashMap because it maintains a doubly-linked list to maintain the order of elements.
+        . one null key and null values available,
+    - TreeMap
+        . put(), remove(), containsKey(), get() - O(log n)
+        . natural ordering
+
+
+7. Stack
+
+
+
+
+8.
+- failfast:
+    - doesn't allow modification of a collection while iteration,
+    - throws ConcurrentModificationException
+    - uses original collection to traverse over the elements
+    - doesn't require extra memory
+    - eg. ArrayList iterator, HashMap iterator
+- failsafe:
+    - allow modification of a collection while iteration
+    - doesn't throw any exception
+    - uses a copy of the original collection to traverse over the elements
+    - requires extra memory
+    - eg. CopyOnWriteArrayList iterator, ConcurrentHashMap iterator
+
+

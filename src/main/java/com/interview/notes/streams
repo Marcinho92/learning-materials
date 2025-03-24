@@ -1,0 +1,39 @@
+sortedArr.stream()
+                .limit(4).mapToLong(num -> num).sum()
+sortedArr.stream()
+                .skip(1).mapToLong(num -> num).sum();
+
+Map<Integer, Long> groupedSocks = ar.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        return groupedSocks.values().stream()
+                .map(val -> val / 2)
+                .mapToInt(Math::toIntExact)
+                .sum();
+
+Map<Integer, List<String>> groupedByLength = sortedByLength.stream()
+                .collect(Collectors.groupingBy(String::length));
+
+List<String> sortedLines = grid.stream()
+                .peek(line -> Arrays.sort(line.toCharArray()))
+                .collect(Collectors.toList());
+
+q.stream().mapToInt(i -> i).toArray()
+
+set1.removeIf(num -> !set2.contains(num));
+set1.stream().mapToInt(Integer::intValue).toArray();
+
+List<String> sortedStrings = unsorted.stream()
+                                .sorted(Comparator.comparingInt(String::length))
+                                .collect(Collectors.toList());
+
+IntStream.range(0, arr.length)
+            .filter(i -> i != index)
+            .map(i -> arr[i])
+            .toArray();
+
+Map<Double, String> result = entries.stream()
+                                .map(nums -> nums.stream().mapToInt(Integer::intValue).average())
+                                .collect(Collectors.toMap(
+                                        num -> num.getAsDouble(),
+                                        num -> String.valueOf(num.getAsDouble())
+                                ));

@@ -1,0 +1,21 @@
+Hierarchy of exceptions:
+- Throwable
+    . Error - represents unrecoverable errors that usually occur at the system level, such as OutOfMemoryError
+        . AssertionError
+        . OutOfMemoryError
+        . StackOverflowError
+    . Exception - represents recoverable errors and has several subclasses, such as RuntimeException and IOException
+        . RuntimeException and its subclasses represent unchecked exceptions that do not need to be declared in a method's throws clause.
+            . NullPointerException
+            . IndexOutOfBoundsException
+            . ArithmeticException
+        . Checked Exceptions - must be declared in a method's throws clause or handled within the method using a try-catch block
+            . IOException
+            . SQLException
+            . ClassNotFoundException
+
+
+
+
+
+

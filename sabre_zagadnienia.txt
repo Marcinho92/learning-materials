@@ -1,0 +1,319 @@
+1. equals/hashCode
+	- equal () method return true if two objects are exactly the same i.e. they are pointing to the same memory address
+	- hashcode method return int and is implemented as a native method. 
+
+
+2. kolekcje (hash map, array list, linked list)
+- List:
+	List allows duplicate elements
+	List maintains the order of elements as they are added to the list
+	List provides indexed access to its elements using an integer index
+	List provide ways to iterate over their elements and the order of iteration is guaranteed
+	
+	https://medium.com/@basecs101/comparing-arraylist-and-linkedlist-in-java-latest-2b133b29489f
+    - ArrayList
+        . effective for data storage and access
+        . based on a dynamic array
+        . allocates memory in chunks
+        . provides fast random access to elements using an index
+        . is slower for inserting or deleting elements in the middle of the list, because it requires shifting elements to fill the gap
+        . is faster for iterating over all elements in the list, because it can use an index to access elements directly
+    - LinkedList
+        . effective for data manipulation
+        . based on a doubly-linked list
+        . allocates memory for each element separately
+        . provides slower access because it needs to traverse the list from the beginning or end to reach a specific element
+        . is faster for inserting or deleting elements, because it only requires updating the links between nodes
+        . is slower for iterating over all elements in the list, because it needs to traverse the list using its links.		
+    - Vector
+    - CopyOnWriteArrayList
+        . thread-safe implementation of the List interface that provides efficient and scalable access to elements,
+            and allows concurrent iteration over the list without the risk of ConcurrentModificationException
+			
+- Set:
+	ConcurrentHashSet - thread-safe Set
+	Set does not allows duplicate elements
+	Set does not guarantee any specific order of elements
+	Set does not provide indexed access to its elements using an integer index
+	Set provide ways to iterate over their elements but the order of iteration is not guarantee
+	
+    - HashSet
+        . unordered collection of unique elements
+        . uses a hash table to store the elements, which allows for constant-time performance for basic operations
+            such as add, remove, and contains.
+        . to get the values in a HashSet in Java, you can use an iterator or a for-each loop.
+    - TreeSet
+        . ordered collection of unique elements
+        . implemented as a self-balancing binary search tree, which allows for log(n) performance for basic operations
+            such as add, remove, and contains.
+    - LinkedHashSet
+        . maintain the order of elements in a collection
+    - EnumSet
+        . specjalną implementacją Set przeznaczoną do pracy z typami wyliczeniowymi (enum).
+		
+- Map:
+    - HashMap
+        . provides constant-time performance for most operations, such as put(), get(), and containsKey()
+        . don't preserve ordering, order of the elements in a HashMap is not guaranteed
+        . not synchronized,
+        . one null key and null values available,
+        . fail-fast - if the HashMap is modified while an iteration over the HashMap is in progress in any way except through
+            the iterator's own remove method, the iterator will throw a ConcurrentModificationException.
+        . faster than Hashtable duo to no synchronization
+    - ConcurrentHashMap
+        . thread-safe, which means that all its methods are thread-safe
+        . allow multiple threads to access and modify the map concurrently without the need for external synchronization
+        . Weakly consistent - iterator may reflect some, but not necessarily all, of the changes made to the map
+            since the iterator was created.
+        . To modify a ConcurrentHashmap, it is generally recommended to use the map's built-in thread-safe methods,
+            such as putIfAbsent, replace, or remove. These methods are designed to handle concurrent modifications
+            to the map safely, without requiring the use of iterators
+    - HashTable
+        . synchronized,
+        . no null keys and values available,
+        . not fail-fast
+        . legacy class (since Java 5, ConcurrentHashMap is the recommended alternative for a thread-safe Hashtable)
+    - LinkedHashMap
+        . is able to maintain the insertion order of keys by using a doubly-linked list to store its entries
+        . provides a predictable iteration order, which is the order in which the entries were added to the map
+        . slightly slower than HashMap because it maintains a doubly-linked list to maintain the order of elements.
+        . one null key and null values available,
+    - TreeMap
+		. put(), remove(), containsKey(), get() - O(log n)
+        . natural ordering
+
+
+
+3. immutable (czy sa korzysci z uzycia w mapie)
+	- This is the prime reason why it is always recommended to have an immutable object so that the state of the object does not get changed 
+		once it is created and hence the hashcode for the object does not get changed which makes sure we always get to the same bucket location for a Key.
+	- how make class immutable:
+		. Declare the class as final so it can’t be extended
+        . Make all of the fields private so that direct access is not allowed
+        . Don’t provide setter methods for variables
+        . Make all mutable fields final so that a field’s value can be assigned only once
+        . Initialize all fields using a constructor method performing deep copy
+        . Perform cloning of objects in the getter methods to return a copy rather than returning the actual object reference
+	
+
+4. exceptions
+Hierarchy of exceptions:
+- Throwable
+    . Error - represents unrecoverable errors that usually occur at the system level, such as OutOfMemoryError
+        . AssertionError
+        . OutOfMemoryError
+        . StackOverflowError
+    . Exception - represents recoverable errors and has several subclasses, such as RuntimeException and IOException
+        . RuntimeException and its subclasses represent unchecked exceptions that do not need to be declared in a method's throws clause.
+            . NullPointerException
+            . IndexOutOfBoundsException
+            . ArithmeticException
+        . Checked Exceptions - must be declared in a method's throws clause or handled within the method using a try-catch block
+            . IOException
+            . SQLException
+            . FileNotFoundException	
+
+
+5. polimorofizm i dziedziczenie (interfejsy, klasy abstrakcyjne, diamond, modyfikatory)
+------ readme -> line 21, OOP
+    - 4 principles of OOP:
+        . inheritance - used to create a hierarchy of classes that inherit and extend behavior from each other.
+        . abstraction - used to hide the implementation details of components and to present a simpler, higher-level interface to other parts of the system
+        . encapsulation - used to protect the internal state of objects and to control how other objects can access or modify that state
+        . polymorphism - ability of objects of different classes to be treated as if they are of the same type. It allows us to write code
+            that can work with objects of different types in a uniform way, without needing to know the specific class of each object.
+    - abstract class vs interface. When to Use:
+        . abstract class:
+            . When you have some common implementation to share among subclasses.
+            . When you want to enforce a hierarchy and prevent direct instantiation of the base class.
+            . When you need to control access to members using access modifiers.
+        . interface:
+            . When you want to define a contract that multiple unrelated classes can implement.
+            . When you want to achieve loose coupling between classes.
+            . When you need to support multiple inheritance.
+
+
+
+6. wielowatkowosc (runnable/callable, synchronized)
+------ readme -> line 142, Step 4. Multithreading
+	. Callable - similar to a Runnable, but it can return a value and throw a checked exception.
+        Callable<Integer> myCallable = () -> { doSomething(); return result; };
+        Future<Integer> future = executorService.submit(myCallable);
+    . Runnable - task that can be executed by an Executor. It does not return a value and cannot throw a checked exception.
+        Runnable myRunnable = () -> { doSomething(); };
+        Future<?> future = executorService.submit(myRunnable);
+
+
+
+7. string (literal, new)
+- String literal:
+	String str = “GeeksForGeeks”;
+When you declare string like this, you are actually calling intern() method on String. This method references internal pool of string objects. 
+If there already exists a string value “GeeksForGeeks”, then str will reference of that string and no new String object will be created.
+
+- This is string object:
+	String str = new String(“GeeksForGeeks”);
+In this method JVM is forced to create a new string reference, even if “GeeksForGeeks” is in the reference pool.
+
+Therefore, if we compare performance of string literal and string object, string object will always take more time to execute than string 
+literal because it will construct a new string every time it is executed.
+
+String s1="foo"; literal will be created in StringPool
+String s2="foo"; this time it will check "foo" literal is already available in StringPool or not as now it exist so s2 will refer the same literal as s1
+String s3=new String("foo"); "foo" literal will be created in StringPool first then through string arg constructor String Object 
+	will be created i.e "foo" in the heap due to object creation through new operator then s3 will refer it
+
+
+
+8. spring (ogolnie, wstrzykiwanie zaleznosci, zakres beanow)
+------ readme -> line 207, Step 6. Spring-Framework
+- Core – a key module that provides fundamental parts of the framework, such as IoC or DI
+- ORM integration – provides integration layers for popular object-relational mapping APIs, such as JPA, JDO and Hibernate
+- MVC framework – a web module implementing the Model View Controller design pattern
+- The org.spring.framework.context.ApplicationContext interface represents the Spring IoC container and is responsible for instantiating, configuring, and assembling the beans.
+- Dependency Injection (DI) to wzorzec projektowy, który umożliwia wstrzykiwanie zależności (obiektów) do klasy zamiast tworzenia ich bezpośrednio w kodzie.
+	W Springu Dependency Injection jest realizowane za pomocą kontenera IoC (Inversion of Control), który zarządza cyklem życia obiektów (beanów) i ich zależnościami.
+- The Spring Beans are Java Objects that are initialized by the Spring IoC container.
+- By default, a Spring Bean is initialized as a singleton.
+- In order to set Spring Bean’s scope, we can use @Scope annotation. 
+	Supported scopes: Singleton, Prototype, Request, Session, Global-session
+- Scope prototype means that every time we call for an instance of the Bean, Spring will create a new instance and return it. This differs from 
+	the default singleton scope, where a single object instance is instantiated once per Spring IoC container.
+- Simply put, all the requests processed by the DispatcherServlet are directed to classes annotated with @Controller. Each controller class maps 
+	one or more requests to methods that process and execute the requests with provided inputs.
+
+
+
+
+9. memory model
+https://www.digitalocean.com/community/tutorials/java-jvm-memory-model-memory-management-in-java
+- The heap is a large bulk of memory intended for allocation of objects. When you create an object with the new keyword, it gets allocated on the heap. 
+	However, the reference to this object lives on the stack
+- The stack is a part of memory that contains information about nested method calls down to the current position in the program. It also contains 
+	all local variables and references to objects on the heap defined in currently executing methods.
+
+
+
+10. gc (serial, parallel, cms, g1, z) 
+https://opensource.com/article/22/7/garbage-collection-java
+- different types of Garbage Collectors in Java:
+	. serial - A primitive implementation of GC using just a single thread. When Garbage Collection happens, it pauses the application 
+		(commonly known as a "stop the world" event.) This is suitable for applications that can withstand small pauses
+	. parallel (java 5-8) - Like Serial GC, this also uses a "stop the world" method. That means that while GC is happening, application threads are paused. 
+		But in this case, there are multiple threads performing GC operation. This type of GC is suitable for applications with 
+		medium to large data sets running in a multithreaded and multiprocessor environment.
+	. CMS (Concurrent Mark Sweep) - reduce pause times by performing most of its work concurrently with the application threads. It divides the collection 
+		process into stages: marking, concurrent marking, and sweeping. While it significantly reduces pause times, it may not perform as well on very 
+		large heaps and can sometimes lead to fragmentation issues.
+	. G1 (since java 7) - This collector uses multiple threads to perform garbage collection in smaller regions of memory, making it suitable for applications 
+		with large heap sizes and low pause times.
+		Garbage First Collector doesn’t work like other collectors and there is no concept of Young and Old generation space. It divides the heap space 
+		into multiple equal-sized heap regions. When a garbage collection is invoked, it first collects the region with lesser live data, hence “Garbage First”.
+	. Z - performs all expensive work concurrently, without stopping the execution of application threads for more than 10 ms, which makes it suitable 
+		for applications that require low latency.
+
+- The heap is divided up into smaller spaces or generations. These spaces are Young Generation, Old Generation, and Permanent Generation.
+	. The young generation hosts most of the newly created objects. 
+		The young generation space is further divided into three spaces: an Eden space and two survivor spaces such as Survivor 1 (s1) and Survivor 2 (s2).
+	. The old generation hosts objects that have lived in memory longer than a certain “age” (the number of collection cycles the object has survived.)
+	. The permanent generation or more commonly called, PermGen, contains metadata required by the JVM to describe the classes and methods used 
+		in the application. It also contains the string pool for storing interned strings.
+		
+- First, any new objects are allocated to the Eden space.
+- When the Eden space fills up, a minor garbage collection is triggered. Referenced objects are moved to the first survivor space. Unreferenced objects are deleted.
+- During the next minor GC, the same thing happens to the Eden space. Unreferenced objects are deleted and referenced objects are moved to a second survivor space.
+- After every minor garbage collection cycle, the age of each object is checked. Those that have reached a certain arbitrary age, for example, 8, 
+	are promoted from the young generation to the old generation.
+	
+- The most straightforward case of an object becoming eligible for garbage collection is if all its references are null.
+	Cyclic dependencies without any live external reference are also eligible for GC.
+	Another obvious case is when a parent object is set to null.
+- If there is no memory space for creating a new object in Heap, Java Virtual Machine throws OutOfMemoryError or more specifically java.lang.OutOfMemoryError heap space.
+
+
+
+
+11. maven
+- Maven is a Build automation tool:
+	. automate the process of generating source code (if any auto-generated code is used, eg. based on WSDL)
+	. compiling source code
+	. running the tests
+	. packaging the software components into executable formats like JAR or WAR files
+	. Manages Dependencies
+	. It can install the packaged code in various repositories like, Local Repository, Server Repository, and Central Repository.
+- types of Maven Repository: Local (.m2), Remote (public or private) and Central (default public repository)
+- maven commands:
+	. mvn clean - Cleans the project and removes all files generated by the previous build
+	. mvn compile - Compiles source code of the project.
+	. mvn test-compile - Compiles the test source code.
+	. mvn test - Runs tests for the project.
+	. mvn package - Creates JAR or WAR file for the project to convert it into a distributable format
+	. mvn install - Deploys the packaged JAR/ WAR file to the local repository
+	. mvn validate - validate the project’s POM and configuration.
+	. mvn deploy - Copies the packaged JAR/ WAR file to the remote repository after compiling, running tests and building the project.
+- mvn -X install 			//if we want to run the step in debug mode for more detailed build information and logs, we will add -X to the actual command
+- mvn install -DskipTests	//when we do not want to run the tests while packaging or installing the Java project
+- Maven Build Phases:
+	. Validate - validates if the project structure is correct. For example – It checks if all the dependencies have been downloaded and are available in the local repository.
+	. Compile - compiles the source code (converts the .java files to .class) and stores the classes in the target/classes folder
+	. Test - runs unit tests for the project.
+	. Package - packages the compiled code in a distributable format like JAR or WAR
+	. Install - installs the packaged code to the local Maven repository.
+	. Deploy - copies the packaged code to the remote repository for sharing it with other developers
+	
+
+
+12. rest vs soap
+https://testbook.com/interview/rest-api-interview-questions
+SOAP:
+	- protokół oparty na XML, który definiuje zasady komunikacji między aplikacjami. Ma bardziej sztywną strukturę i wymaga użycia określonego zestawu standardów
+	- używa wyłącznie dokładnie określonego formatu XML w celu przesyłu wiadomości. 
+	- może być stanowy lub bezstanowy
+	- ze względu na cięższy format XML i dodatkowy narzuty związane z obsługą specyfikacji, SOAP może być mniej wydajny i trudniejszy do skalowania
+	- jest bardziej złożony, wymaga zrozumienia specyfikacji XML oraz narzędzi wspierających SOAP, jak WSDL
+REST:
+	- styl architektoniczny, opiera się na zasobach, które są identyfikowane przez unikalne URL. RESful API są lekkie i zorientowane na zasoby
+	- może używać różnych formatów danycyh, takich jak JSON, XML, HTML, YAML, jednak najczęściej używany jest JSON
+	- jest bezstanowy, czyli serwer nie przechowuje informacji o sesji. Każdy request od klient musi zawierać wszystkie potrzebne informacje
+	- jest zwykle bardziej wydajny i skalowalny ze względu na lekkość protokołu HTTP i możliwość użycia JSON
+	- jest prostszy w implementacji i łatwiejszy do zrozumienia. Nie wymaga użycia konkretnych narzędzi  
+
+
+
+13. sortowanie
+
+
+
+14. linux (zrzucenie logu do pliku) - https://learning.lpi.org/pl/learning-materials/010-160/3/3.2/3.2_01/
+tail -f > /log/logs.txt
+tail -f >> /log/logs.txt 				// >> - dopisanie do końca pliku
+fin /usr games 2> logs_error.txt  		// 2> - przekierowanie tylko komunikatów o błędach
+tr -d "l" < text.txt  					// < - przekierowanie standardowego wejścia, tutaj usunięcie w zawartości pliku text.txt litery 'l'
+find /usr admin &> newfile.txt			// &> - przekierowanie standardowego wyjścia i wyjścia błędów
+cat PLIK1 | head -n 1 | cat PLIK2 		// otwórz plik 1, wytnij tylko pierwszą linię, połacz pierwszą linie pliku 1 z plikiem 2
+cat FILE1 FILE2							// wypisanie skonkatenowanej zawartości plików
+
+
+15. git (merge vs rebase, fast forward)
+- git merge is nice because it’s a non-destructive operation. The existing branches are not changed in any way.
+	Usage: merging feature_branch -> master
+- git rebase moves the entire feature branch to begin on the tip of the main branch, effectively incorporating all of the new commits in main.
+	First, it eliminates the unnecessary merge commits required by git merge. Second rebasing also results in a perfectly linear project history—you can follow
+	Usage: merging master -> feature_branch. Rebasing pomaga zachować aktualność naszej gałęzi bez zaśmiecania historii commitów niepotrzebnymi merge commitami.
+- ommit represents a snapshot of the changes made to files in a repository at a specific point in time
+- create a new branch by using: git checkout -b 'branch_name'
+- git fetch command retrieves changes from a remote repository to the local repository. It updates the remote-tracking branches in the local repository 
+	to reflect the state of the remote repository, but it does not update the working directory or merge any changes into the current branch.
+- git pull command also retrieves changes from a remote repository, but it goes a step further by fetching changes and merging them into the current branch in one step. 
+	It essentially performs a git fetch followed by a git merge to incorporate the changes from the remote repository into the current branch.	
+
+
+
+
+
+
+
+
+
+
+

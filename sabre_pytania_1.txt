@@ -1,0 +1,397 @@
+=====
+Spring
+======
+1) Co oznacza adnotacja @Bean w Springu i do czego służy 
+	To declare a bean, you can annotate a method with the @Bean annotation. You use this method to register a bean definition within an ApplicationContext 
+	of the type specified as the method’s return value.
+	It's used in class annotated with @Configuration
+	
+2) Jakie mamy zakresy beanów w Springu, który z nich jest domyślny
+	- singleton - (Default) Scopes a single bean definition to a single object instance for each Spring IoC container
+	- prototype - Scopes a single bean definition to any number of object instances.
+	- request - Scopes a single bean definition to the lifecycle of a single HTTP request. That is, each HTTP request has its own instance of a bean
+	- session - Scopes a single bean definition to the lifecycle of an HTTP Session
+	- application - Scopes a single bean definition to the lifecycle of a ServletContext
+	- websocket - Scopes a single bean definition to the lifecycle of a WebSocket
+ 
+3) przykłady adnotacji w Springu? @Component, @Respository, @Service, @Controller, @Configuration, @Bean, @Autowired
+	- @Component - Ogólna adnotacja, która służy do oznaczania klasy jako komponentu zarządzanego przez Springa
+	- @Repository - specjalizacja @Component, przeznaczona dla komponentów dostępu do danych (DAO). Spring traktuje klasy oznaczone @Repository jako warstwę dostępu do bazy danych.
+	- @Service - specjalizacja @Component, ale przeznaczona dla warstwy usługowej. Oznacza, że klasa pełni rolę usługi biznesowej.
+	- @Controller - specjalizacja @Component, ale przeznaczona dla warstwy prezentacji (kontrolery MVC). Oznacza, że klasa obsługuje żądania HTTP i zwraca odpowiedzi.
+	- @Configuration oznacza klasę jako źródło definicji beanów w Springu. Klasy oznaczone tą adnotacją zawierają metody oznaczone @Bean, które definiują 
+		beany zarządzane przez kontener Springa.
+	- @Bean jest używana do oznaczania metody, która zwraca obiekt, który ma być zarządzany przez kontener Springa. Jest stosowana w klasach oznaczonych @Configuration
+	- @Autowired jest używana do automatycznego wstrzykiwania zależności przez Springa. Może być stosowana na polach, konstruktorach, czy metodach setterowych
+	
+
+4) jeśli mamy 2 beany o wspólnym interfejsie, to w jaki sposób załadować jeden konkretny? jakiej adnotacji można uzyć? @Qualifier, ewentualnie można użyć @Bean
+	1. 	@Component("serviceA")
+		public class ServiceA implements MyService {
+			// Implementacja
+		}
+	
+		@Autowired
+		@Qualifier("serviceA")
+		private final MyService myService;
+		
+	2. 	@Component
+		@Primary
+		public class ServiceA implements MyService {
+			// Implementacja
+		}
+		
+		@Autowired
+		private final MyService myService;
+		
+		W tym scenariuszu, jeśli nie określisz @Qualifier, Spring domyślnie wstrzyknie ServiceA jako implementację MyService.
+	
+	3.	@Autowired
+		private MyService serviceA;  // Wstrzykiwanie po nazwie beana 
+		
+	4. 	@Bean
+		public MyService serviceB() {
+			return new ServiceB();
+		}
+		
+		@Autowired
+		@Qualifier("serviceB")
+		private final MyService myService;
+		
+
+5) Co to jest Inversion of control
+	W praktyce IoC oznacza, że programista nie musi ręcznie tworzyć instancji obiektów ani zarządzać zależnościami pomiędzy nimi. Zamiast tego, obiekty te 
+	są dostarczane przez kontener IoC, który automatycznie wstrzykuje odpowiednie zależności tam, gdzie są one potrzebne
+	
+	Standardowe podejście:
+	private Engine engine;
+
+    public Car() {
+        this.engine = new Engine();  // Tworzenie zależności wewnątrz klasy
+    }
+	
+	Inversion of Control:
+	private final Engine engine;
+
+    @Autowired
+    public Car(Engine engine) {  // Zależność jest wstrzykiwana przez kontener IoC
+        this.engine = engine;
+    }
+
+6) co to są profile i jak się ich uzywa w Springu
+	Profile w Springu są mechanizmem, który pozwala na definiowanie różnych konfiguracji aplikacji w zależności od środowiska, w którym aplikacja jest uruchamiana 
+	(np. dev, test, prod). Dzięki profilom, możemy kontrolować, które beany są ładowane do kontenera Springa w określonym środowisku, co umożliwia elastyczne 
+	zarządzanie konfiguracją aplikacji.
+	
+	@Component
+	@Profile("dev")
+	public class DevDatabaseConfig implements DatabaseConfig {
+		// Konfiguracja dla środowiska deweloperskiego
+	}
+	
+	Możesz także używać plików konfiguracyjnych dla różnych profili:
+	# application-dev.properties
+	datasource.url=jdbc:h2:mem:testdb
+	datasource.username=dev_user
+	
+	Aktywowanie profili:
+	1. 	# application.properties
+		spring.profiles.active=dev
+	2. Zmienna środowiskowa:
+		bash: export SPRING_PROFILES_ACTIVE=dev
+	3. Argumety liniii poleceń:
+		java -jar myapp.jar --spring.profiles.active=prod
+		
+	Załóżmy, że mamy aplikację, która korzysta z różnych baz danych w zależności od środowiska.
+	Jeśli aktywujesz profil dev, aplikacja użyje konfiguracji z klasy DevDataSourceConfig. 
+	Jeśli aktywujesz profil prod, aplikacja użyje konfiguracji z klasy ProdDataSourceConfig.
+	
+
+7) FactoryBean
+	FactoryBean w Springu to specjalny interfejs, który pozwala na bardziej zaawansowane zarządzanie tworzeniem beanów w kontenerze IoC.
+	Implementując interfejs FactoryBean, dostarczasz metodę, która zwraca instancję beana. Dzięki temu masz pełną kontrolę nad tym, jak ten bean jest tworzony.
+	Tworzenie skomplikowanych obiektów: Kiedy proces tworzenia obiektu jest złożony lub wymaga specjalnej logiki, FactoryBean pozwala na enkapsulację tej logiki.
+	Dynamiczne tworzenie obiektów: W przypadku, gdy konfiguracja lub typ obiektu zależy od warunków, które są znane dopiero w czasie wykonywania, 
+		FactoryBean umożliwia dynamiczne zarządzanie tym procesem.
+	Integracja z zewnętrznymi bibliotekami: Kiedy musisz zarządzać obiektami z zewnętrznych bibliotek, które nie są przystosowane do Springa, 
+		FactoryBean może być użyteczny do opakowania tych obiektów i ich konfiguracji.
+	
+	Przykład:
+	public class HttpClient {
+		private String endpoint;
+		private int timeout;
+
+		// Gettery, settery i inne metody
+
+		public HttpClient(String endpoint, int timeout) {
+			this.endpoint = endpoint;
+			this.timeout = timeout;
+		}
+
+		public void makeRequest() { // Logika wykonywania żądania HTTP }
+	}
+	
+	public class HttpClientFactoryBean implements FactoryBean<HttpClient> {
+
+		private String endpoint;
+		private int timeout;
+		
+		@Override
+		public HttpClient getObject() throws Exception {
+			return new HttpClient(endpoint, timeout);
+		}
+
+		@Override
+		public Class<?> getObjectType() {
+			return HttpClient.class;
+		}
+
+		@Override
+		public boolean isSingleton() {
+			return true;
+		}
+	}
+	
+	@Bean
+    public HttpClientFactoryBean httpClient() {
+        HttpClientFactoryBean factory = new HttpClientFactoryBean();
+        factory.setEndpoint("https://api.example.com");
+        factory.setTimeout(5000);
+        return factory;
+    }
+
+
+======
+Web
+======
+1) czym się różni SOAP od REST? (D) - wsdl, cxf, nie ma zdefiniowanego formatu,  j rpc, json 
+
+
+2) jakie rodzaje operacji można użyć w przypadku Restful (REST) service? GET, POST, PUT, PATCH, DELETE (P) - GET, POST, PUT, PATCH, DELETE (+)
+	
+
+3) z jakich elementów składa się wiadomości WebService? (envelope, header, body) (B) - koperta, nagłowek, ciało (+) 
+	- envelope - określa początek i koniec wiadomości SOAP. Jest to element obowiązkowy w każdej wiadomości SOAP
+	- header - Opcjonalna część wiadomości, która może zawierać metadane dotyczące przetwarzania wiadomości, takie jak informacje o bezpieczeństwie, transakcjach, czy routing
+	- body - część wiadomości, która zawiera dane aplikacji. W Body znajdują się właściwe dane lub żądania i odpowiedzi między klientem a serwerem. Jest to element obowiązkowy.
+	- fault - Opcjonalny element w Body, który zawiera informacje o błędach, jeśli wystąpiły podczas przetwarzania wiadomości. Fault informuje o przyczynie błędu i szczegółach.
+
+
+4) co to jest programowanie reaktywne?
+	W programowaniu reaktywnym aplikacje są zbudowane wokół obsługi zdarzeń i strumieni danych.
+	Programowanie reaktywne to paradygmat programowania skoncentrowany na asynchronicznym przetwarzaniu strumieni danych i zdarzeń.
+	
+
+
+5) co to jest throttling i do czego służy?
+	Throttling to technika zarządzania przepustowością systemu, która polega na kontrolowaniu tempa, w jakim operacje są wykonywane lub żądania są przetwarzane.
+	Throttling działa poprzez ograniczenie liczby operacji lub żądań, które mogą być obsługiwane w określonym czasie.
+	1. Limity Ruchu: Określenie maksymalnej liczby żądań, które mogą być obsługiwane w danym okresie (np. liczba żądań na sekundę lub minutę).
+	2. Limitowanie Przepustowości: Ograniczenie prędkości przetwarzania operacji lub przesyłania danych, co może obejmować kontrolowanie 
+		prędkości transmisji danych lub liczby operacji na sekundę.
+	3. Wstrzymywanie lub kolejkowanie operacji, gdy system osiągnie określony próg obciążenia, a następnie kontynuowanie ich przetwarzania, gdy obciążenie spadnie.
+	
+
+
+6) co to jest DoS (Denial of service) i na czym polega?
+	Denial of Service (DoS) to rodzaj ataku, którego celem jest uniemożliwienie użytkownikom dostępu do zasobów systemu lub usługi 
+	poprzez przeciążenie lub zablokowanie tych zasobów. 
+	Ataki DoS polegają na zalewaniu systemu żądaniami lub danymi, które przekraczają jego zdolność do obsługi.
+	Przykłady:
+		1. Zalewanie żądaniami (Flooding): Generowanie dużej liczby żądań HTTP do serwera aplikacji, co może prowadzić do wyczerpania zasobów serwera i jego przeciążenia.
+		2. Atak na zasoby systemowe: Powolne wysyłanie niekompletnych żądań HTTP w celu utrzymania otwartych połączeń z serwerem, co prowadzi do wyczerpania dostępnych połączeń.
+		3. Wykorzystanie luk w oprogramowaniu: Buffer Overflow: Wysyłanie danych, które przekraczają bufor pamięci, co prowadzi do awarii lub przejęcia kontroli nad systemem
+	
+	Sposoby obrony:
+		1. Konfigurowanie zapór ogniowych (firewall) i systemów wykrywania/ochrony przed włamaniami (IDS/IPS) w celu monitorowania i blokowania nieprawidłowego ruchu sieciowego.
+		2. Ustawianie limitów na liczbę żądań z jednego źródła i stosowanie filtrów w celu odrzucania podejrzanych lub nadmiernych żądań.
+		3. Projektowanie systemów w sposób skalowalny, np. z użyciem rozproszonego load balancera i rozdzielanie ruchu na wiele serwerów.
+		4. Utrzymywanie aktualności oprogramowania w celu usuwania znanych luk i podatności.
+	
+
+7) co to jest failover, do czego służy i jak można go uzyskać?
+	Failover odnosi się do procesu, w którym system automatycznie przełącza się z jednego komponentu (np. serwera, bazy danych, aplikacji) na jego zapasową wersję, 
+	gdy komponent główny ulega awarii. Celem failoveru jest zapewnienie nieprzerwanego działania usług i minimalizacja wpływu awarii na użytkowników i operacje biznesowe.
+	1. Zwiększenie dostępności: Failover zapewnia, że usługi pozostają dostępne nawet w przypadku awarii komponentu.
+	2. Redundancja: Failover wprowadza redundancję, co oznacza, że istnieją zapasowe komponenty, które mogą przejąć funkcje w przypadku awarii głównych komponentów.
+	3. Ochrona danych: W przypadku awarii sprzętu lub oprogramowania, failover może pomóc w ochronie danych, zapewniając ich dostępność i minimalizując ryzyko utraty danych.
+	4. Zarządzanie ryzykiem: Implementacja failoveru pomaga w zarządzaniu ryzykiem związanym z awariami i przestojami, co jest istotne dla organizacji zależnych od technologii.
+	
+	Jak można uzyskać failover?
+		1. Klasteryzacja serwerów
+		2. Replikacja baz danych
+		3. Load Balancing
+		4. Backup i Disaster Recovery (Fizyczne lub chmurowe lokalizacje, które mogą przejąć operacje w przypadku katastrofalnych awarii w głównym centrum danych.)
+
+
+8) Co to jest blue-green deployment?
+	Blue-Green Deployment polega na utrzymywaniu dwóch identycznych środowisk produkcyjnych: blue i green. W danym momencie tylko jedno z nich obsługuje ruch produkcyjny.
+	1. Środowisko Blue: To aktualnie aktywne środowisko, które obsługuje cały ruch produkcyjny.
+	2. Środowisko Green: Jest to drugie, pasywne środowisko, które jest aktualizowane i testowane.
+	Jak to działa:
+		Aktualizacja: Nowa wersja aplikacji jest wdrażana i testowana w środowisku green, które jest pasywne.
+		Przełączenie: Po zakończeniu testów i weryfikacji, ruch produkcyjny jest przekierowywany z blue na green, czyniąc green nowym środowiskiem produkcyjnym.
+		Rollback: Jeśli coś pójdzie nie tak po przełączeniu, ruch można szybko przekierować z powrotem na środowisko blue.
+
+======
+Java
+======
+1) Jakie rodzaje funkcji można implementować w interfejsach i czym się charakreryzują? 
+	- static: Mogą być wywoływane bezpośrednio na interfejsie, a nie na instancji klasy implementującej.
+	- default: Mogą być używane przez klasy implementujące interfejs bez konieczności ich nadpisywania.
+	- private: Mogą być używane do wspólnego kodu implementacji, który nie jest dostępny dla klas implementujących.
+
+
+2) java 9-15 - jakie nowości się pojawiły w tych wersjach? 
+	- Wprowadzenie prywatnych metod w interfejsach, co pozwala na lepszą organizację kodu w ramach interfejsów.
+	- Wprowadzenie słowa kluczowego var do deklaracji lokalnych zmiennych, co pozwala na automatyczne inferowanie typu zmiennej przez kompilator.
+		var list = new ArrayList<String>();
+	- List.of(), Set.of()
+	- switch
+		var dayOfWeek = switch (day) {
+			case MONDAY, FRIDAY, SUNDAY -> "Weekend";
+			case TUESDAY, THURSDAY -> "Weekday";
+			default -> throw new IllegalArgumentException("Invalid day: " + day);
+		};
+	- Wprowadzenie bloków tekstowych (text blocks) do łatwego tworzenia wieloliniowych łańcuchów tekstowych, co poprawia czytelność kodu.
+	- Wprowadzenie rekordów (records), które są specjalnym rodzajem klas służących do przechowywania danych bez pisania boilerplate code.
+		public record Point(int x, int y) { }
+	- Nowa składnia dla operatora instanceof, która upraszcza kod i automatycznie rzutuje obiekt.
+		if (obj instanceof String s) {
+			// `s` jest typu `String` i może być używane bez dodatkowego rzutowania
+		}
+	- Sealed classes - Wprowadzenie klas z ograniczonymi dziedziczeniami, które pozwalają na określenie, które klasy mogą dziedziczyć 
+		po danej klasie lub implementować dany interfejs.
+		public sealed class Shape permits Circle, Rectangle { }
+
+
+3) mutowalność obiektu, jak sie uzyskuje, zalety, wady 
+4) HashMap vs TreeMap
+    - HashMap
+        . provides constant-time performance for most operations, such as put(), get(), and containsKey()
+        . don't preserve ordering, order of the elements in a HashMap is not guaranteed
+    - TreeMap
+		. put(), remove(), containsKey(), get() - O(log n)
+        . natural ordering
+
+5) jak usunąć duplikaty z listy, np. z ArrayList zachowując kolejność elementów?
+	- użyć LinkedHashSet<>()
+	- stream().distinct()
+
+6) kolekcje - jakie znasz główne interfejsy, zależności między nimi
+Iterable:
+    - Collection:
+        - List:
+            - ArrayList
+            - LinkedList
+            - Vector:
+                - Stack
+        - Queue:
+            - PriorityQueue
+            - Dequeue:
+                - ArrayDeque
+        - Set:
+            - HashSet
+            - TreeSet
+            - LinkedHashSet
+
+Map:
+    - SortedMap:
+        - TreeMap
+    - HashMap
+    - HashTable
+	- LinkedHashMap
+	- ConcurrentHashMap
+
+
+7) różne implementacje mapy + use casy, HashMap, TreeMap, LinkedHashMap, ConcurrentHashMap, Hashtable, EnumMap, LinkedHashSet
+
+
+======
+Docker/AWS
+======
+1) Co to jest Docker i do czego służy 
+	Docker to platforma do automatyzacji budowy, uruchamiania i zarządzania aplikacjami w kontenerach. Kontenery to lekkie, przenośne jednostki, 
+	które pakują aplikację wraz z jej zależnościami, co umożliwia uruchamianie jej w różnych środowiskach bez obaw o problemy z kompatybilnością.
+	
+	Obraz to niezmienny szablon, z którego można uruchomić kontener. Obraz zawiera wszystkie pliki i ustawienia niezbędne do uruchomienia aplikacji. 
+	Obrazy są zbudowane na podstawie plików konfiguracyjnych, takich jak Dockerfile.
+	
+	Dockerfile to plik konfiguracyjny, który zawiera instrukcje dotyczące budowy obrazu Docker. Definiuje, jakie zależności i konfiguracje są potrzebne, 
+	jak zainstalować aplikację i jakie operacje należy wykonać podczas budowy obrazu.
+	
+	Zastosowanie:
+	1. Izolacja Środowiska - Eliminacja problemu "u mnie działa". Kontenery zapewniają izolację środowiskową, co oznacza, że aplikacje mogą być uruchamiane 
+		w identycznych warunkach na różnych maszynach, eliminując problemy z zależnościami i konfiguracją. 
+	2. Przenośność - Obrazy Docker są przenośne i mogą być uruchamiane na różnych systemach operacyjnych i platformach bez zmian w kodzie aplikacji. 
+		To ułatwia przenoszenie aplikacji między środowiskami, np. z lokalnego środowiska deweloperskiego na serwer produkcyjny.
+	3. Automatyzacja i CI/CD - Docker jest często używany w procesach Continuous Integration (CI) i Continuous Deployment (CD). Automatyzacja budowy, 
+		testowania i wdrażania aplikacji w kontenerach ułatwia i przyspiesza cykl życia oprogramowania.
+	4. Skalowalność i wydajność - Kontenery są lekkie i szybkie w uruchamianiu, co pozwala na łatwe skalowanie aplikacji i efektywne zarządzanie zasobami. 
+		Można uruchamiać wiele instancji aplikacji na tej samej maszynie fizycznej lub wirtualnej.
+		
+	Przykłąd użycia:
+	1. Tworzenie Dockerfile:
+		# Użyj obrazu bazowego
+		FROM openjdk:11-jre-slim
+
+		# Dodaj plik JAR do kontenera
+		COPY target/myapp.jar /app/myapp.jar
+
+		# Ustaw komendę startową
+		ENTRYPOINT ["java", "-jar", "/app/myapp.jar"]
+		
+		
+	2. Budowanie obrazu:
+		docker build -t myapp:latest .
+		
+	3. Uruchomienie kontenera:
+		docker run -d -p 8080:8080 myapp:latest
+	
+
+2) do czego służą kontenery w Dockerze
+	Kontener to jednostka uruchomieniowa, która zawiera aplikację oraz wszystkie jej zależności (biblioteki, pliki konfiguracyjne itp.).
+
+3) co to jest Ansible? Do czego służy ansible-vault? 
+	Ansible to narzędzie do automatyzacji konfiguracji, zarządzania i orkiestracji, które ułatwia zarządzanie dużymi środowiskami informatycznymi. 
+	Jest szeroko stosowane w DevOps do automatyzacji procesów takich jak wdrażanie aplikacji, konfiguracja systemów, zarządzanie infrastrukturą oraz aktualizacje oprogramowania.
+	
+	Ansible vault:
+	Ansible Vault to funkcjonalność wbudowana w Ansible, która pozwala na szyfrowanie danych, takich jak hasła, klucze API, i inne wrażliwe informacje, 
+	w plikach konfiguracyjnych. Jest używana do zabezpieczania danych, które są częścią playbooków lub innych plików Ansible.
+
+
+4) Co to jest Docker image i do czego służy?
+	Obraz to niezmienny szablon, z którego można uruchomić kontener. Obraz zawiera wszystkie pliki i ustawienia niezbędne do uruchomienia aplikacji. 
+	Obrazy są zbudowane na podstawie plików konfiguracyjnych, takich jak Dockerfile.
+
+
+5) co oznacza skrót SaaS(software as a service), IaaS (infrastructure as a service), PaaS? Podaj przykłady PaaS (platform as a service)
+1. SaaS (Software as a Service):
+	-  model dostarczania oprogramowania, w którym aplikacje są hostowane przez dostawcę i udostępniane użytkownikom przez Internet.
+	- przykłady: Gmail, Microsoft Office 365
+2. IaaS (Infrastructure as a Service):
+	- model dostarczania infrastruktury IT jako usługi. Klienci mają dostęp do wirtualnych zasobów obliczeniowych, takich jak maszyny wirtualne, 
+		przestrzeń dyskowa i sieci, które można skalować w górę lub w dół w zależności od potrzeb. 
+	- przykłady: AWS, Azure, GCP
+3. PaaS (Platform as a Service):
+	- model dostarczania platformy programistycznej jako usługi. Użytkownicy mają dostęp do środowiska programistycznego, które pozwala na tworzenie, wdrażanie 
+		i zarządzanie aplikacjami bez konieczności zarządzania infrastrukturą, systemami operacyjnymi i bazami danych. 
+		PaaS oferuje narzędzia do rozwoju, testowania i zarządzania aplikacjami.
+	- przykłady: Heroku, Google App Engine, Microsoft Azure App Service, AWS Elastic Beanstalk
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

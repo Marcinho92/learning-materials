@@ -1,0 +1,85 @@
+1. Bottlenecks
+    - Wąskie gardła na poziomie bazy danych
+        . Opis problemu: Baza danych często staje się wąskim gardłem, gdy rośnie liczba operacji odczytu i zapisu,
+            co prowadzi do opóźnień, blokad lub przeciążenia serwera bazy danych.
+        . Rozwiązania:
+            . Sharding: Podział bazy danych na mniejsze, niezależne części (shardy) w celu rozłożenia obciążenia na różne serwery.
+            . Replikacja: Tworzenie kopii bazy danych, aby rozłożyć operacje odczytu na różne repliki i zwiększyć dostępność danych.
+            . Optymalizacja zapytań: Przegląd i optymalizacja zapytań SQL, tworzenie indeksów i unikanie kosztownych operacji,
+                takich jak pełne skanowanie tabel.
+            . Korzystanie z baz NoSQL: Przejście na bazy danych NoSQL, które lepiej radzą sobie z dużymi wolumenami danych
+                i operacjami zapisu.
+
+    - Wąskie gardła na poziomie pamięci podręcznej (caching)
+        . Opis problemu: Niewłaściwe lub niewystarczające wykorzystanie pamięci podręcznej może prowadzić do nadmiernych
+            operacji na bazie danych lub innych zasobach, co zwiększa czas odpowiedzi.
+        . Rozwiązania:
+            . Zastosowanie rozproszonej pamięci podręcznej: Wykorzystanie systemów takich jak Redis czy Memcached do
+                przechowywania często odczytywanych danych blisko aplikacji.
+            . Strategie wygaszania (eviction): Ustalanie odpowiednich strategii wygaszania danych z pamięci podręcznej,
+                aby uniknąć problemów związanych z przestarzałymi danymi.
+            . Cache Stampede: Implementacja mechanizmów zapobiegających lawinowemu odpytywaniu bazy danych
+                przy wygaśnięciu cache, np. poprzez użycie "dogpile prevention".
+
+    - Wąskie gardła na poziomie sieci
+        . Opis problemu: Zbyt duże obciążenie sieci, przepustowość, opóźnienia i awarie sieci mogą prowadzić do
+            degradacji wydajności całego systemu.
+        . Rozwiązania:
+            . Load Balancing: Użycie load balancera do rozłożenia ruchu na różne serwery aplikacyjne, aby uniknąć
+                przeciążenia pojedynczych maszyn.
+            . Content Delivery Network (CDN): Użycie CDN do dystrybucji treści statycznych, takich jak obrazy, skrypty
+                i arkusze stylów, w celu zmniejszenia obciążenia na serwerach aplikacji i przyspieszenia ładowania stron.
+            . Rozproszenie geograficzne: Rozproszenie zasobów w różnych regionach geograficznych, aby
+                zminimalizować opóźnienia sieciowe.
+
+    - Wąskie gardła na poziomie serwera aplikacyjnego
+        . Opis problemu: Przeciążenie serwera aplikacyjnego może prowadzić do opóźnień w przetwarzaniu żądań,
+            błędów serwera lub awarii systemu.
+        . Rozwiązania:
+            . Autoskalowanie: Wykorzystanie mechanizmów autoskalowania w chmurze, aby dynamicznie dostosowywać liczbę
+                instancji serwera aplikacyjnego do aktualnego obciążenia.
+            . Asynchroniczne przetwarzanie: Implementacja asynchronicznego przetwarzania zadań, aby unikać blokowania
+                wątków na długotrwałych operacjach.
+            . Microservices Architecture: Przejście na architekturę mikrousług, aby podzielić monolityczną aplikację
+                na mniejsze, niezależne usługi, co ułatwia skalowanie i zarządzanie.
+
+    - Wąskie gardła na poziomie systemów plików i I/O
+        . Opis problemu: Intensywne operacje wejścia/wyjścia (I/O) mogą prowadzić do opóźnień, szczególnie jeśli dane
+            są przechowywane na dyskach twardych lub jeśli system plików jest przeciążony.
+        . Rozwiązania:
+            . Użycie SSD: Przejście na dyski SSD, które oferują znacznie lepszą wydajność I/O w porównaniu do tradycyjnych dysków HDD.
+            . Asynchroniczne I/O: Implementacja asynchronicznego I/O, aby zmniejszyć czas blokowania na operacjach dyskowych.
+            . Przechowywanie w chmurze: Przechowywanie dużych plików i danych w rozproszonych systemach plików w chmurze,
+                takich jak Amazon S3.
+
+    - Wąskie gardła na poziomie zarządzania stanem sesji
+        . Opis problemu: Przechowywanie stanu sesji na jednym serwerze aplikacyjnym może prowadzić do problemów skalowalności i dostępności.
+        . Rozwiązania:
+            . Stateless Sessions: Implementacja sesji bezstanowych, które nie wymagają przechowywania stanu na serwerze aplikacyjnym.
+            . Rozproszone zarządzanie sesjami: Przechowywanie stanu sesji w rozproszonych systemach, takich jak Redis,
+                aby umożliwić skalowanie poziome serwerów aplikacyjnych.
+            . Token-based Authentication: Przejście na autoryzację opartą na tokenach, takich jak JWT, które eliminują
+                konieczność przechowywania stanu sesji.
+
+    - Wąskie gardła związane z równoległym przetwarzaniem
+        . Opis problemu: Niewłaściwe zarządzanie wątkami, synchronizacją lub współbieżnością może prowadzić do blokad (deadlock) lub przeciążenia CPU.
+        . Rozwiązania:
+            . Thread Pooling: Wykorzystanie pul wątków do zarządzania równoległym przetwarzaniem zadań, co zapobiega
+                tworzeniu nadmiernej liczby wątków.
+            . Lock-free Data Structures: Użycie struktur danych wolnych od blokad (lock-free) lub struktur opartych
+                na CAS (Compare-And-Swap) do optymalizacji współbieżnego przetwarzania.
+            . Optymalizacja algorytmów: Przegląd i optymalizacja algorytmów pod kątem równoległego przetwarzania,
+                aby zminimalizować konflikty i blokady.
+
+    - Wąskie gardła na poziomie limitów API lub usług zewnętrznych
+        . Opis problemu: Ograniczenia przepustowości lub liczby żądań w usługach zewnętrznych mogą spowolnić działanie systemu.
+        . Rozwiązania:
+            . Rate Limiting: Implementacja mechanizmów limitowania liczby żądań do usług zewnętrznych, aby
+                uniknąć przekroczenia ich limitów.
+            . Caching: Wykorzystanie cache do przechowywania wyników odpowiedzi z usług zewnętrznych, aby zmniejszyć liczbę żądań.
+            . Asynchroniczne wywołania: Używanie asynchronicznych wywołań do zewnętrznych API, aby zminimalizować
+                wpływ opóźnień na resztę systemu.
+
+
+
+
