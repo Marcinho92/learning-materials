@@ -1,0 +1,90 @@
+1. General tips:
+- don't be too vague
+- highlight your skills and how you cooperate with teammates basing on your experiences
+- don't say you never experienced certain situation, you can say how would you react in this situation
+
+
+2. Low performer:
+- what precisely was the problem
+- who's fault is that he is low performer
+- if it's not his fault then it's good idea to document what was frong for the puture possible problems
+
+e.g. Pietrek and his problem with git or droping database
+e.g. writing tests in pair programming
+
+
+3. Team conflict:
+- understand points of view of both sides
+
+e.g. situation with Mariusz where he said the problem is with recalculate but problem was with calculate
+
+
+4. Interest of company:
+
+e.g. working in international team, 
+e.g. taking part in whole process of creating software, from gatherin requirements to deploing and maintenance
+e.g. working with known technologies but also with some new for me
+
+
+5. Strong dissagreement:
+- deeply understand both ideas
+- attack ideas, not people
+- you have to commit to what you decided even if it's not what you wanted
+
+e.g. situation when I thought that bug was a result of last someone's deploy, but actually it was hidden bug made by me so I had to fix this
+e.g. ??? situation with Mariusz where he said the problem is with recalculate but problem was with calculate
+
+
+6. Sudden onboarding:
+- having good documentation so new employee could install environemnt and get familiar with project
+- make me available for new employee and his questions and explainign current situation that sometimes I can don't have time to respond immediately
+- giving something simple to do, e.g. some simple bug to fix, or adding small, not crucial feature 
+
+
+7. Work distribution:
+- describe scope of work that was to be done,
+- ask people about theit preferences, giving critical parts to most experienced employees
+
+
+e.g. dividing regression test on several people
+
+
+8. Past mistakes:
+- describe problem
+- say how did you handle it
+- day what did you learnt from it
+
+e.g. deploing new version with bug (mobilet), deploy changes on tst and akc but not to prd (insurance link4)
+
+
+9. Challenging project:
+
+e.g. insurance link4, developed mainly by me, my first microservice, dealing with external company and with frontend team
+
+
+10. Production outage:
+- stay calm, try find out what is the problem, if possible asm sb for help
+
+e.g. problem with insurance link4 - problem with consents that came out after deploing sth else, but there was actually hidden bug
+
+
+11. Tough feedback:
+
+e.g. after problem with mobilet manager didn't sey to me directly about problem, but instead sey about it on meeting generaly how handle situations like that
+e.g. when I haven't finiszed my aork at the end of the day my manger ask my to finish it at evening because I had whole day for doing it
+
+
+12. Comfort zone:
+
+e.g. changing work, changing position from QA to developer
+
+
+13. Strengths and improvements
+- 
+
+e.g. i'm experienced in monolitic and microservices, in backend technologies, I was QA so I try to concentrate good tests coverage,
+e.g. I could be better in designing system and in cicd
+
+
+
+

@@ -1,0 +1,60 @@
+- OOP i co sie na niego składa    +  polimotrfizm, data abstraction, inheritance, encapsulation 
+- design patterns - strategy pattern, Dependency Injection
+- Spring Boot why to use    + makes app developement faster and easier thanks to embedded servlet container 
+- SQL transaction, JOIN, indeksy po co uzywane,      
+- hashCode i equals,
+- streams, jakie operacja, czy można reużyć strema
+- hibernate, do czego, co to ORM, przechowywanie kolekcji, adnotacje, lazy a eager
+- rodzaje testów, mocking,
+- maven
+- exception, how to handle them, types of exceptions
+- różnice między LinkedList a ArrayList a Setem
+
+
+- REST vs SOAP
+- klasa abstrakcyjna a interfejs
+- Excpetion a Error
+- działanie HashMap
+- metody synchronizacji wątków
+- how synchronizacja jest zapewniona w kolekcjach thread-safe?
+- pamięć w javie, heap i stack, zarządzanie pamięcią
+- try-with-resources
+- wzorce, opisać Buildera
+- Jak tworzyć encję w hibernate, jakie relacje, jak je tworzyć
+- rodzaje testów, mockowanie, jaka biblioteka (mockito - nie można mockowac static methods)
+- code coverage of test
+- program: int[]{1, 2, 3} -> int[]{1, 2, 4}
+
+
+- tablica asocjacyjna, lista (ogólnie i w javie), złożoności obliczeniowe wyszukiwania, wstawiania, usuwania (linked list i array list i map),
+- kopiowanie plików, obsługa plików w try-catch, 
+- gdzie znajdują się w pamięci zmienne lokalne primitywne i obiekty, gdzie prymityw z obiektu
+- co to deadlock, czy da się z nim poradzić w trakcie uruchomienia programu,
+- różnica StringBuffer a StringBuilder,
+- final na klasie i polu
+- zapobieganie SQL injection
+- REST api - używać int czy Integer?
+- activMQ
+- maven - install i deploy
+- spring - cykl życia beanów, @Configuration,
+- co to indeksy w DB
+- wzorce projektowe - wymienić i opisać Factory
+- kopiowanie dużych plików - jak zrobić to wydajnie
+
+
+
+
+Zagadnienia do interview:
+- sql: join, union, index, view
+- exceptions: difference between exception and error, how handla NPE, checked and unchecked exceptions,
+- serialization: how and why to do it
+- mutltithreading: how create threads, different ways of synhronizations 
+- collections
+- final, finally, finalize
+- klasa abstrakcyjna a interface
+- OOP i jego principles (inheritance, polimorphism, encapsulation, abstraction)
+- podział paięci, zarządzanie pamięcia, BC 
+- streamy
+- hibernate, do czego, co to ORM, przechowywanie kolekcji, adnotacje, lazy a eager, HQL
+- design patterns, e.g. strategy, decorator, dependency incejtion, builder, factory
+- rodzaje testów
